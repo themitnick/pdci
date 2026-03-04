@@ -4,6 +4,23 @@
   display: block;
 }
 
+/* ============================
+   Hero Slideshow
+   ============================ */
+.hero-slide {
+  will-change: opacity;
+}
+
+/* Progress bar animation on active slide indicator */
+@keyframes hero-progress-fill {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+.hero-progress {
+  animation: hero-progress-fill 6s linear forwards;
+}
+
 /* Marquee scrolling animation for the news ticker */
 @keyframes marquee {
   0% { transform: translateX(0); }

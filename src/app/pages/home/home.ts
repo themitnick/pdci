@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -8,7 +8,58 @@ import { RouterLink } from '@angular/router';
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
-export class Home {
+export class Home implements OnInit, OnDestroy {
+  private slideInterval: ReturnType<typeof setInterval> | null = null;
+  private readonly SLIDE_DURATION = 6000;
+
+  protected readonly currentSlide = signal(0);
+
+  protected readonly slides = [
+    { image: 'slides/tiam.webp' },
+    { image: 'slides/pdci-marche-deux-plateaux.jpg' },
+    { image: 'slides/Assises-de-la-jeunesse-du-PDCI-RDA.jpg' },
+  ];
+
+  ngOnInit(): void {
+    this.startAutoSlide();
+  }
+
+  ngOnDestroy(): void {
+    this.stopAutoSlide();
+  }
+
+  protected nextSlide(): void {
+    this.currentSlide.update(i => (i + 1) % this.slides.length);
+    this.restartAutoSlide();
+  }
+
+  protected prevSlide(): void {
+    this.currentSlide.update(i => (i - 1 + this.slides.length) % this.slides.length);
+    this.restartAutoSlide();
+  }
+
+  protected goToSlide(index: number): void {
+    this.currentSlide.set(index);
+    this.restartAutoSlide();
+  }
+
+  private startAutoSlide(): void {
+    this.slideInterval = setInterval(() => {
+      this.currentSlide.update(i => (i + 1) % this.slides.length);
+    }, this.SLIDE_DURATION);
+  }
+
+  private stopAutoSlide(): void {
+    if (this.slideInterval) {
+      clearInterval(this.slideInterval);
+      this.slideInterval = null;
+    }
+  }
+
+  private restartAutoSlide(): void {
+    this.stopAutoSlide();
+    this.startAutoSlide();
+  }
   protected readonly stats = [
     { value: '5M+', label: 'Militants' },
     { value: '31', label: 'Régions couvertes' },
