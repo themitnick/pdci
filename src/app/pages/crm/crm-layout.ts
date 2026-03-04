@@ -16,6 +16,7 @@ export class CrmLayout {
 
   protected readonly sidebarOpen = signal(true);
   protected readonly mobileSidebarOpen = signal(false);
+  protected readonly showLogoutModal = signal(false);
 
   protected readonly navGroups = [
     {
@@ -64,7 +65,16 @@ export class CrmLayout {
     this.mobileSidebarOpen.update(v => !v);
   }
 
-  protected logout(): void {
+  protected requestLogout(): void {
+    this.showLogoutModal.set(true);
+  }
+
+  protected cancelLogout(): void {
+    this.showLogoutModal.set(false);
+  }
+
+  protected confirmLogout(): void {
+    this.showLogoutModal.set(false);
     this.auth.logout();
     this.router.navigateByUrl('/crm/login');
   }

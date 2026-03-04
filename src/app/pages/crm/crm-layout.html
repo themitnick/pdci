@@ -89,7 +89,7 @@
           <div class="text-sm font-medium truncate">{{ user().name }}</div>
           <div class="text-[10px] text-gray-400 truncate">{{ user().role }}</div>
         </div>
-        <button (click)="logout()" title="Déconnexion" class="p-1.5 rounded-lg hover:bg-white/10 transition-colors shrink-0">
+        <button (click)="requestLogout()" title="Déconnexion" class="p-1.5 rounded-lg hover:bg-white/10 transition-colors shrink-0">
           <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
         </button>
       }
@@ -123,7 +123,7 @@
         <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500"></span>
       </button>
       <!-- Logout -->
-      <button (click)="logout()" title="Déconnexion" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-500 hover:text-red-700 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">
+      <button (click)="requestLogout()" title="Déconnexion" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-500 hover:text-red-700 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
         <span class="hidden sm:inline">Déconnexion</span>
       </button>
@@ -140,3 +140,27 @@
     <router-outlet />
   </main>
 </div>
+
+<!-- Logout confirmation modal -->
+@if (showLogoutModal()) {
+  <div class="fixed inset-0 z-60 flex items-center justify-center bg-black/50 backdrop-blur-sm" (click)="cancelLogout()" (keydown.escape)="cancelLogout()">
+    <div class="bg-white rounded-2xl shadow-2xl w-82 mx-4 p-5 animate-[fadeIn_0.15s_ease-out]" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+      <!-- Icon -->
+      <div class="mx-auto w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mb-4">
+        <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+      </div>
+      <!-- Text -->
+      <h3 class="text-lg font-semibold text-gray-900 text-center">Confirmer la déconnexion</h3>
+      <p class="text-sm text-gray-500 text-center mt-2">Êtes-vous sûr de vouloir vous déconnecter de l'espace administration ?</p>
+      <!-- Actions -->
+      <div class="flex gap-3 mt-6">
+        <button (click)="cancelLogout()" class="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+          Annuler
+        </button>
+        <button (click)="confirmLogout()" class="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-xl transition-colors">
+          Se déconnecter
+        </button>
+      </div>
+    </div>
+  </div>
+}
