@@ -19,9 +19,9 @@
       @for (link of navLinks; track link.path) {
         <a
           [routerLink]="link.path"
-          routerLinkActive="!text-primary !font-semibold !bg-primary-light"
+          routerLinkActive="!text-primary !border-primary"
           [routerLinkActiveOptions]="{ exact: link.path === '/' }"
-          class="px-4 py-2 text-sm font-medium text-gray-600 rounded-lg transition-all duration-200 hover:text-primary hover:bg-primary-light no-underline"
+          class="px-3 py-2 text-sm font-bold text-gray-600 border-b-2 border-transparent transition-all duration-200 hover:text-primary hover:border-primary no-underline"
         >
           {{ link.label }}
         </a>
@@ -32,13 +32,13 @@
     <div class="hidden lg:flex items-center gap-3">
       <a
         routerLink="/adhesion"
-        class="inline-flex items-center justify-center px-5 py-2 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-all duration-200 no-underline min-h-10"
+        class="inline-flex items-center justify-center px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-md bg-primary text-white hover:bg-primary-dark transition-all duration-200 no-underline min-h-10"
       >
         Adhérer
       </a>
       <a
         routerLink="/dons"
-        class="inline-flex items-center justify-center px-5 py-2 text-sm font-semibold rounded-lg bg-white text-primary border-2 border-primary hover:bg-primary-light transition-all duration-200 no-underline min-h-10"
+        class="inline-flex items-center justify-center px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-md bg-white text-primary border-2 border-primary hover:bg-primary-light transition-all duration-200 no-underline min-h-10"
       >
         Faire un don
       </a>
@@ -77,9 +77,9 @@
         @for (link of navLinks; track link.path) {
           <a
             [routerLink]="link.path"
-            routerLinkActive="!text-primary !bg-primary-light"
+            routerLinkActive="!text-primary !border-l-primary"
             [routerLinkActiveOptions]="{ exact: link.path === '/' }"
-            class="block px-4 py-4 text-lg font-medium text-gray-700 rounded-lg transition-all duration-200 hover:text-primary hover:bg-primary-light no-underline"
+            class="block px-4 py-4 text-base font-bold text-gray-700 border-l-2 border-transparent transition-all duration-200 hover:text-primary hover:border-l-primary no-underline"
             (click)="closeMenu()"
           >
             {{ link.label }}
@@ -88,14 +88,14 @@
         <div class="flex flex-col gap-3 mt-6 pt-6 border-t border-gray-200">
           <a
             routerLink="/adhesion"
-            class="flex items-center justify-center px-5 py-3 text-base font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-all no-underline"
+            class="flex items-center justify-center px-5 py-3 text-sm font-bold uppercase tracking-wider rounded-md bg-primary text-white hover:bg-primary-dark transition-all no-underline"
             (click)="closeMenu()"
           >
             Adhérer
           </a>
           <a
             routerLink="/dons"
-            class="flex items-center justify-center px-5 py-3 text-base font-semibold rounded-lg bg-white text-primary border-2 border-primary hover:bg-primary-light transition-all no-underline"
+            class="flex items-center justify-center px-5 py-3 text-sm font-bold uppercase tracking-wider rounded-md bg-white text-primary border-2 border-primary hover:bg-primary-light transition-all no-underline"
             (click)="closeMenu()"
           >
             Faire un don

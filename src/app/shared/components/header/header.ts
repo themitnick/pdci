@@ -17,6 +17,7 @@ export class Header {
     { label: 'Le Parti', path: '/parti' },
     { label: 'Actualités', path: '/actualites' },
     { label: 'Événements', path: '/evenements' },
+    { label: 'Vidéos', path: '/videos' },
     { label: 'Contact', path: '/contact' },
   ];
 

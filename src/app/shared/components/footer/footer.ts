@@ -30,7 +30,7 @@ export class Footer {
   protected readonly resourceLinks = [
     { label: 'Communiqués', path: '/actualites' },
     { label: 'Galerie photos', path: '/actualites' },
-    { label: 'Vidéos', path: '/actualites' },
+    { label: 'Vidéos', path: '/videos' },
     { label: 'Coordinations', path: '/contact' },
   ];
 }

@@ -1,22 +1,25 @@
 <!-- Hero Banner -->
-<section class="bg-gradient-to-br from-primary to-primary-dark py-16 md:py-20">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center text-white">
-    <h1 class="text-4xl md:text-5xl font-extrabold mb-4">Événements</h1>
-    <p class="text-lg text-white/80 max-w-2xl mx-auto">Meetings, conférences, tournées et formations — participez à la vie du parti</p>
+<section class="relative bg-gray-900 py-14 md:py-20 overflow-hidden">
+  <div class="absolute inset-0 bg-[url('https://picsum.photos/seed/evt-hero/1600/600')] bg-cover bg-center opacity-15"></div>
+  <div class="absolute bottom-0 left-0 right-0 h-1 bg-primary"></div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
+    <p class="text-xs font-black uppercase tracking-[0.25em] text-primary mb-3">Agenda</p>
+    <h1 class="text-3xl md:text-5xl font-black text-white mb-3 leading-tight">Événements</h1>
+    <p class="text-base text-white/60 max-w-xl">Meetings, conférences, tournées et formations — participez à la vie du parti</p>
   </div>
 </section>
 
 <!-- Filters -->
 <section class="bg-white border-b border-gray-200 sticky top-16 lg:top-[72px] z-30">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-    <div class="flex items-center gap-2 overflow-x-auto pb-1 -mb-1 scrollbar-hide">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex items-center gap-0 overflow-x-auto scrollbar-hide -mb-px">
       @for (type of eventTypes; track type) {
         <button
           (click)="setFilter(type)"
-          class="px-4 py-2 text-sm font-medium rounded-full whitespace-nowrap transition-all duration-200"
+          class="px-5 py-4 text-sm font-semibold whitespace-nowrap transition-all duration-200 border-b-2 -mb-px"
           [class]="filterType() === type
-            ? 'bg-primary text-white'
-            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+            ? 'text-primary border-primary'
+            : 'text-gray-500 border-transparent hover:text-gray-900 hover:border-gray-300'"
         >
           {{ type }}
         </button>
@@ -26,49 +29,105 @@
 </section>
 
 <!-- Events List -->
-<section class="py-12 md:py-16">
+<section class="py-12 md:py-16 bg-gray-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6">
     @if (filteredEvents.length === 0) {
-      <div class="text-center py-16">
+      <div class="text-center py-20">
         <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-        <p class="text-gray-500 text-lg">Aucun événement trouvé</p>
+        <p class="text-gray-500 text-lg font-semibold">Aucun événement trouvé</p>
+        <p class="text-gray-400 text-sm mt-1">Essayez une autre catégorie</p>
       </div>
     } @else {
-      <div class="space-y-6">
-        @for (event of filteredEvents; track event.id) {
-          <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100">
-            <div class="flex flex-col md:flex-row">
-              <!-- Date block -->
-              <div class="flex md:flex-col items-center justify-center gap-2 md:gap-0 bg-primary text-white p-4 md:p-6 md:w-28 shrink-0">
-                <span class="text-3xl md:text-4xl font-extrabold leading-none">{{ event.day }}</span>
-                <span class="text-sm md:text-base font-medium uppercase">{{ event.month }}</span>
-                <span class="text-xs opacity-70">{{ event.year }}</span>
+      <!-- Featured Next Event -->
+      @if (filteredEvents.length > 0) {
+        <div class="relative bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 mb-10 border border-gray-100">
+          <div class="absolute top-0 left-0 w-1.5 h-full bg-primary"></div>
+          <div class="flex flex-col md:flex-row">
+            <!-- Large Date -->
+            <div class="flex flex-row md:flex-col items-center justify-center gap-2 md:gap-1 bg-gray-900 text-white p-5 md:p-8 md:w-36 shrink-0">
+              <span class="text-4xl md:text-5xl font-black leading-none">{{ filteredEvents[0].day }}</span>
+              <span class="text-sm md:text-base font-bold uppercase tracking-wider">{{ filteredEvents[0].month }}</span>
+              <span class="text-xs text-white/50">{{ filteredEvents[0].year }}</span>
+            </div>
+            <!-- Content -->
+            <div class="flex-1 p-6 md:p-8">
+              <div class="flex items-center gap-3 mb-3">
+                <span class="px-3 py-1 text-[10px] font-black uppercase tracking-[0.15em]" [class]="getTypeBadgeColor(filteredEvents[0].type)">{{ filteredEvents[0].type }}</span>
+                <span class="text-[10px] font-black uppercase tracking-[0.15em] text-primary bg-primary-light px-3 py-1">Prochain événement</span>
               </div>
-              <!-- Content -->
-              <div class="flex-1 p-6">
-                <div class="flex flex-wrap items-center gap-2 mb-3">
-                  <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full" [class]="getTypeBadgeColor(event.type)">{{ event.type }}</span>
-                  <span class="text-xs text-gray-400">{{ event.capacity }} places</span>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">{{ event.title }}</h3>
-                <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ event.description }}</p>
-                <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500">
-                  <span class="flex items-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    {{ event.location }}
-                  </span>
-                </div>
+              <h2 class="text-xl md:text-2xl font-black text-gray-900 mb-3 leading-tight">{{ filteredEvents[0].title }}</h2>
+              <p class="text-sm text-gray-500 mb-4 max-w-2xl">{{ filteredEvents[0].description }}</p>
+              <div class="flex flex-wrap items-center gap-5 text-sm text-gray-500">
+                <span class="flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                  {{ filteredEvents[0].location }}
+                </span>
+                <span class="flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                  {{ filteredEvents[0].capacity }} places
+                </span>
               </div>
-              <!-- Action -->
-              <div class="flex items-center p-6 md:pl-0">
-                <button class="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-all w-full md:w-auto">
-                  S'inscrire
-                </button>
+            </div>
+            <!-- Action -->
+            <div class="flex items-center p-6 md:p-8 md:pl-0">
+              <button class="inline-flex items-center justify-center px-8 py-3 text-sm font-bold rounded-md bg-primary text-white hover:bg-primary-dark transition-all w-full md:w-auto uppercase tracking-wider">
+                S'inscrire
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Section header -->
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-xs font-black uppercase tracking-[0.2em] text-gray-900 border-b-2 border-primary pb-2">Prochains événements</h3>
+        <span class="text-xs text-gray-400">{{ filteredEvents.length }} événement{{ filteredEvents.length > 1 ? 's' : '' }}</span>
+      </div>
+
+      <!-- Events Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        @for (event of filteredEvents.slice(1); track event.id) {
+          <div class="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 flex">
+            <!-- Date strip -->
+            <div class="flex flex-col items-center justify-center gap-0.5 bg-gray-900 text-white px-5 py-4 shrink-0 min-w-[72px]">
+              <span class="text-2xl font-black leading-none">{{ event.day }}</span>
+              <span class="text-[10px] font-bold uppercase tracking-wider">{{ event.month }}</span>
+            </div>
+            <!-- Content -->
+            <div class="flex-1 p-5 min-w-0">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="px-2.5 py-0.5 text-[10px] font-black uppercase tracking-[0.1em]" [class]="getTypeBadgeColor(event.type)">{{ event.type }}</span>
               </div>
+              <h3 class="text-base font-bold text-gray-900 mb-1.5 group-hover:text-primary transition-colors line-clamp-1">{{ event.title }}</h3>
+              <div class="flex flex-wrap items-center gap-3 text-xs text-gray-400">
+                <span class="flex items-center gap-1">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                  {{ event.location }}
+                </span>
+                <span class="flex items-center gap-1">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                  {{ event.capacity }} places
+                </span>
+              </div>
+            </div>
+            <!-- Arrow -->
+            <div class="flex items-center px-5 shrink-0">
+              <svg class="w-5 h-5 text-gray-300 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </div>
           </div>
         }
       </div>
     }
+  </div>
+</section>
+
+<!-- CTA Band -->
+<section class="bg-primary py-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+    <div>
+      <h3 class="text-white text-xl font-black mb-1">Vous organisez un événement local ?</h3>
+      <p class="text-white/70 text-sm">Contactez votre coordination régionale pour l'ajouter au calendrier officiel</p>
+    </div>
+    <a routerLink="/contact" class="px-8 py-3 bg-white text-primary text-sm font-bold rounded-md hover:bg-gray-100 transition-colors no-underline shrink-0 uppercase tracking-wider">Nous contacter</a>
   </div>
 </section>

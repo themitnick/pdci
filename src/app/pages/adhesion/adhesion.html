@@ -1,34 +1,36 @@
 <!-- Hero Banner -->
-<section class="bg-gradient-to-br from-primary to-primary-dark py-12 md:py-16">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center text-white">
-    <h1 class="text-3xl md:text-4xl font-extrabold mb-3">Adhésion en ligne</h1>
-    <p class="text-base text-white/80 max-w-xl mx-auto">Rejoignez le PDCI-RDA et participez à la construction de la Côte d'Ivoire de demain</p>
+<section class="relative bg-gray-900 py-12 md:py-16 overflow-hidden">
+  <div class="absolute bottom-0 left-0 right-0 h-1 bg-primary"></div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
+    <p class="text-xs font-black uppercase tracking-[0.25em] text-primary mb-3">Rejoignez-nous</p>
+    <h1 class="text-3xl md:text-4xl font-black text-white mb-3 leading-tight">Adhésion en ligne</h1>
+    <p class="text-base text-white/60 max-w-xl">Rejoignez le PDCI-RDA et participez à la construction de la Côte d'Ivoire de demain</p>
   </div>
 </section>
 
 @if (isComplete()) {
   <!-- Success Screen -->
-  <section class="py-16 md:py-24">
+  <section class="py-16 md:py-24 bg-gray-50">
     <div class="max-w-lg mx-auto px-4 sm:px-6 text-center">
-      <div class="w-20 h-20 rounded-full bg-primary-light flex items-center justify-center mx-auto mb-6">
+      <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
         <svg class="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
       </div>
-      <h2 class="text-2xl font-bold text-gray-900 mb-3">Bienvenue au PDCI-RDA !</h2>
+      <h2 class="text-2xl font-black text-gray-900 mb-3">Bienvenue au PDCI-RDA !</h2>
       <p class="text-gray-600 mb-2">Votre demande d'adhésion a été enregistrée avec succès.</p>
       <p class="text-sm text-gray-500 mb-8">Votre dossier est en cours de validation par votre coordination locale. Vous recevrez un SMS de confirmation sous 72h.</p>
-      <div class="bg-primary-light rounded-xl p-6 text-left mb-8">
-        <h3 class="text-sm font-semibold text-gray-900 mb-3">Récapitulatif</h3>
+      <div class="bg-white border border-gray-200 rounded-lg p-6 text-left mb-8">
+        <h3 class="text-xs font-black uppercase tracking-[0.15em] text-gray-900 mb-3">Récapitulatif</h3>
         <div class="space-y-2 text-sm">
-          <div class="flex justify-between"><span class="text-gray-500">N° de dossier</span><span class="font-medium text-gray-900">PDCI-2026-ABJ-004521</span></div>
-          <div class="flex justify-between"><span class="text-gray-500">Statut</span><span class="font-medium text-amber-600">En attente de validation</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">N° de dossier</span><span class="font-bold text-gray-900">PDCI-2026-ABJ-004521</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">Statut</span><span class="font-bold text-amber-600">En attente de validation</span></div>
         </div>
       </div>
       <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-        <a routerLink="/" class="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-all no-underline">
+        <a routerLink="/" class="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-bold rounded-md bg-primary text-white hover:bg-primary-dark transition-all no-underline uppercase tracking-wider">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
           Retour à l'accueil
         </a>
-        <a routerLink="/dons" class="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-all no-underline">
+        <a routerLink="/dons" class="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-bold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 transition-all no-underline">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
           Faire un don
         </a>
@@ -37,7 +39,7 @@
   </section>
 } @else {
   <!-- Stepper + Form -->
-  <section class="py-10 md:py-16">
+  <section class="py-10 md:py-16 bg-gray-50">
     <div class="max-w-2xl mx-auto px-4 sm:px-6">
 
       <!-- Step indicator -->
@@ -46,8 +48,8 @@
           <div class="flex items-center" [class.flex-1]="i < steps.length - 1">
             <div class="flex flex-col items-center">
               <div
-                class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all"
-                [class]="currentStep() > i + 1 ? 'bg-primary text-white' : currentStep() === i + 1 ? 'bg-primary text-white ring-4 ring-primary/20' : 'bg-gray-200 text-gray-500'"
+                class="w-10 h-10 rounded-md flex items-center justify-center text-sm font-black transition-all"
+                [class]="currentStep() > i + 1 ? 'bg-primary text-white' : currentStep() === i + 1 ? 'bg-gray-900 text-white ring-4 ring-gray-900/20' : 'bg-gray-200 text-gray-500'"
               >
                 @if (currentStep() > i + 1) {
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
@@ -55,7 +57,7 @@
                   {{ i + 1 }}
                 }
               </div>
-              <span class="text-xs mt-1.5 text-center hidden sm:block" [class]="currentStep() >= i + 1 ? 'text-primary font-medium' : 'text-gray-400'">{{ step }}</span>
+              <span class="text-[10px] mt-1.5 text-center hidden sm:block uppercase tracking-wider font-bold" [class]="currentStep() >= i + 1 ? 'text-gray-900' : 'text-gray-400'">{{ step }}</span>
             </div>
             @if (i < steps.length - 1) {
               <div class="flex-1 h-0.5 mx-2" [class]="currentStep() > i + 1 ? 'bg-primary' : 'bg-gray-200'"></div>
@@ -64,10 +66,12 @@
         }
       </div>
 
+      <div class="bg-white rounded-lg border border-gray-200 p-6 md:p-8">
+
       <!-- Step 1: Personal Info -->
       @if (currentStep() === 1) {
         <div class="animate-fade-in">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Informations personnelles</h2>
+          <h2 class="text-lg font-black text-gray-900 mb-6 uppercase tracking-wider">Informations personnelles</h2>
           <form [formGroup]="personalForm" class="space-y-5">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
@@ -89,8 +93,77 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Date de naissance <span class="text-red-500">*</span></label>
-                <input formControlName="dateOfBirth" type="date"
-                  class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                <div class="relative">
+                  <!-- Trigger button -->
+                  <button type="button" (click)="toggleCalendar()"
+                    class="w-full flex items-center justify-between px-4 py-3 text-sm border rounded-lg outline-none transition-all bg-white text-left"
+                    [class]="isFieldInvalid(personalForm, 'dateOfBirth') ? 'border-red-500 focus:ring-red-200' : calendarOpen() ? 'border-primary ring-2 ring-primary/20' : 'border-gray-300 hover:border-gray-400'">
+                    <span [class]="formattedDate ? 'text-gray-900' : 'text-gray-400'">{{ formattedDate || 'JJ/MM/AAAA' }}</span>
+                    <svg class="w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                  </button>
+                  @if (isFieldInvalid(personalForm, 'dateOfBirth')) {
+                    <p class="text-xs text-red-500 mt-1">La date de naissance est obligatoire</p>
+                  }
+
+                  <!-- Calendar dropdown -->
+                  @if (calendarOpen()) {
+                    <div class="absolute z-50 top-full left-0 mt-2 w-[320px] bg-white rounded-lg border border-gray-200 shadow-xl p-4 animate-fade-in">
+                      <!-- Month / Year selectors -->
+                      <div class="flex items-center justify-between mb-3">
+                        <button type="button" (click)="calPrevMonth()" class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-100 transition-colors">
+                          <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        </button>
+                        <div class="flex items-center gap-1">
+                          <select [value]="calViewMonth()" (change)="onCalMonthChange($event)"
+                            class="text-sm font-bold text-gray-900 bg-transparent border-none outline-none cursor-pointer pr-1">
+                            @for (month of monthNames; track month; let i = $index) {
+                              <option [value]="i">{{ month }}</option>
+                            }
+                          </select>
+                          <select [value]="calViewYear()" (change)="onCalYearChange($event)"
+                            class="text-sm font-bold text-gray-900 bg-transparent border-none outline-none cursor-pointer">
+                            @for (year of calendarYears(); track year) {
+                              <option [value]="year">{{ year }}</option>
+                            }
+                          </select>
+                        </div>
+                        <button type="button" (click)="calNextMonth()" class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-100 transition-colors">
+                          <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </button>
+                      </div>
+
+                      <!-- Day headers -->
+                      <div class="grid grid-cols-7 mb-1">
+                        @for (d of dayLabels; track d) {
+                          <div class="text-center text-[11px] font-bold uppercase tracking-wider text-gray-400 py-1">{{ d }}</div>
+                        }
+                      </div>
+
+                      <!-- Day grid -->
+                      <div class="grid grid-cols-7">
+                        @for (day of calendarDays(); track $index) {
+                          @if (day === null) {
+                            <div></div>
+                          } @else {
+                            <button type="button"
+                              [disabled]="calIsFuture(day)"
+                              (click)="calSelectDay(day)"
+                              class="h-9 w-full flex items-center justify-center text-sm rounded-md transition-all"
+                              [class]="calIsSelected(day)
+                                ? 'bg-primary text-white font-bold'
+                                : calIsToday(day)
+                                  ? 'bg-primary/10 text-primary font-bold hover:bg-primary/20'
+                                  : calIsFuture(day)
+                                    ? 'text-gray-300 cursor-not-allowed'
+                                    : 'text-gray-700 hover:bg-gray-100'">
+                              {{ day }}
+                            </button>
+                          }
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Genre <span class="text-red-500">*</span></label>
@@ -140,7 +213,7 @@
       <!-- Step 2: Section -->
       @if (currentStep() === 2) {
         <div class="animate-fade-in">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Choix de la section locale</h2>
+          <h2 class="text-lg font-black text-gray-900 mb-6 uppercase tracking-wider">Choix de la section locale</h2>
           <form [formGroup]="sectionForm" class="space-y-5">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1.5">Région <span class="text-red-500">*</span></label>
@@ -158,8 +231,8 @@
                 class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
             </div>
 
-            <div class="bg-gray-50 rounded-xl p-5 space-y-4 mt-6">
-              <h3 class="text-sm font-semibold text-gray-900">Consentements obligatoires</h3>
+            <div class="bg-gray-50 rounded-lg p-5 space-y-4 mt-6 border border-gray-200">
+              <h3 class="text-xs font-black uppercase tracking-[0.15em] text-gray-900">Consentements obligatoires</h3>
               <label class="flex items-start gap-3 cursor-pointer">
                 <input formControlName="acceptStatuts" type="checkbox" class="mt-0.5 w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary">
                 <span class="text-sm text-gray-600">J'accepte les statuts et le règlement intérieur du PDCI-RDA</span>
@@ -180,8 +253,8 @@
       <!-- Step 3: Recap -->
       @if (currentStep() === 3) {
         <div class="animate-fade-in">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Récapitulatif</h2>
-          <div class="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100">
+          <h2 class="text-lg font-black text-gray-900 mb-6 uppercase tracking-wider">Récapitulatif</h2>
+          <div class="bg-white rounded-lg border border-gray-200 divide-y divide-gray-100">
             <div class="p-5">
               <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Informations personnelles</h3>
               <dl class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
@@ -214,19 +287,19 @@
       <!-- Step 4: Payment -->
       @if (currentStep() === 4) {
         <div class="animate-fade-in">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Paiement de la cotisation</h2>
-          <div class="bg-primary-light rounded-xl p-5 mb-6 flex items-center justify-between">
+          <h2 class="text-lg font-black text-gray-900 mb-6 uppercase tracking-wider">Paiement de la cotisation</h2>
+          <div class="bg-primary/5 border border-primary/20 rounded-lg p-5 mb-6 flex items-center justify-between">
             <span class="text-sm font-medium text-gray-700">Montant à payer</span>
             <span class="text-2xl font-bold text-primary">5 000 FCFA</span>
           </div>
 
-          <h3 class="text-sm font-semibold text-gray-900 mb-4">Choisissez votre mode de paiement</h3>
+          <h3 class="text-xs font-black uppercase tracking-[0.15em] text-gray-900 mb-4">Choisissez votre mode de paiement</h3>
           <div class="grid grid-cols-2 gap-3 mb-6">
             @for (method of paymentMethods; track method.id) {
               <button
                 (click)="selectPayment(method.id)"
-                class="flex items-center gap-3 p-4 rounded-xl border-2 transition-all text-left"
-                [class]="selectedPayment() === method.id ? 'border-primary bg-primary-light' : 'border-gray-200 hover:border-gray-300'"
+                class="flex items-center gap-3 p-4 rounded-lg border-2 transition-all text-left"
+                [class]="selectedPayment() === method.id ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-gray-300'"
               >
                 <span class="text-2xl">{{ method.icon }}</span>
                 <span class="text-sm font-medium text-gray-900">{{ method.label }}</span>
@@ -243,9 +316,9 @@
       }
 
       <!-- Navigation Buttons -->
-      <div class="flex items-center justify-between mt-10 pt-6 border-t border-gray-200">
+      <div class="flex items-center justify-between mt-8 pt-6 border-t border-gray-200">
         @if (currentStep() > 1) {
-          <button (click)="prevStep()" class="inline-flex items-center px-5 py-3 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors">
+          <button (click)="prevStep()" class="inline-flex items-center px-5 py-3 text-sm font-bold text-gray-700 hover:text-gray-900 transition-colors">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
             Retour
           </button>
@@ -254,12 +327,12 @@
         }
 
         @if (currentStep() < totalSteps) {
-          <button (click)="nextStep()" class="inline-flex items-center justify-center px-8 py-3 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-all">
+          <button (click)="nextStep()" class="inline-flex items-center justify-center px-8 py-3 text-sm font-bold rounded-md bg-primary text-white hover:bg-primary-dark transition-all uppercase tracking-wider">
             Continuer
             <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
           </button>
         } @else {
-          <button (click)="submit()" [disabled]="isSubmitting()" class="inline-flex items-center justify-center px-8 py-3 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+          <button (click)="submit()" [disabled]="isSubmitting()" class="inline-flex items-center justify-center px-8 py-3 text-sm font-bold rounded-md bg-primary text-white hover:bg-primary-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider">
             @if (isSubmitting()) {
               <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
               Paiement en cours...
@@ -269,6 +342,8 @@
           </button>
         }
       </div>
+
+      </div><!-- end white card -->
     </div>
   </section>
 }

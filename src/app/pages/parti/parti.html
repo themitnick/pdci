@@ -1,24 +1,29 @@
 <!-- Hero Banner -->
-<section class="bg-gradient-to-br from-primary to-primary-dark py-16 md:py-24">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center text-white">
-    <h1 class="text-4xl md:text-5xl font-extrabold mb-4">Le Parti</h1>
-    <p class="text-lg text-white/80 max-w-2xl mx-auto">Découvrez l'histoire, la vision et l'organisation du PDCI-RDA, premier parti politique de Côte d'Ivoire.</p>
+<section class="relative bg-gray-900 py-14 md:py-20 overflow-hidden">
+  <div class="absolute inset-0 bg-[url('https://picsum.photos/seed/parti-hero/1600/600')] bg-cover bg-center opacity-15"></div>
+  <div class="absolute bottom-0 left-0 right-0 h-1 bg-primary"></div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
+    <p class="text-xs font-black uppercase tracking-[0.25em] text-primary mb-3">Depuis 1946</p>
+    <h1 class="text-3xl md:text-5xl font-black text-white mb-3 leading-tight">Le Parti</h1>
+    <p class="text-base text-white/60 max-w-xl">Découvrez l'histoire, la vision et l'organisation du PDCI-RDA, premier parti politique de Côte d'Ivoire.</p>
   </div>
 </section>
 
 <!-- Sub-navigation + Content -->
-<section class="py-12 md:py-16">
+<section class="py-10 md:py-16 bg-gray-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6">
-    <!-- Sub-navigation cards -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-12">
-      @for (page of subPages; track page.path) {
-        <a [routerLink]="page.path"
-          routerLinkActive="!border-primary !bg-primary-light !text-primary"
-          class="flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-gray-200 bg-white text-gray-600 hover:border-primary hover:bg-primary-light hover:text-primary transition-all duration-200 no-underline text-center group">
-          <span class="text-2xl">{{ page.icon }}</span>
-          <span class="text-sm font-semibold">{{ page.label }}</span>
-        </a>
-      }
+    <!-- Sub-navigation tabs -->
+    <div class="bg-white rounded-lg border border-gray-200 mb-10 overflow-x-auto">
+      <div class="flex items-center gap-0 -mb-px min-w-max">
+        @for (page of subPages; track page.path) {
+          <a [routerLink]="page.path"
+            routerLinkActive="!text-primary !border-primary !bg-primary/5"
+            class="flex items-center gap-2 px-6 py-4 text-sm font-bold border-b-2 border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300 transition-all no-underline whitespace-nowrap">
+            <span>{{ page.icon }}</span>
+            <span>{{ page.label }}</span>
+          </a>
+        }
+      </div>
     </div>
 
     <!-- Router Outlet for sub-pages -->

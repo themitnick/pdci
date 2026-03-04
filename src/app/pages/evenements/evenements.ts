@@ -1,4 +1,5 @@
 import { Component, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 interface EventItem {
   id: number;
@@ -15,6 +16,7 @@ interface EventItem {
 @Component({
   selector: 'app-evenements',
   standalone: true,
+  imports: [RouterLink],
   templateUrl: './evenements.html',
   styleUrl: './evenements.scss',
 })

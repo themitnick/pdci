@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, computed, ElementRef, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -38,6 +38,39 @@ export class Adhesion {
   ];
 
   protected selectedPayment = signal('orange');
+
+  // ── Calendar date picker state ──
+  protected readonly calendarOpen = signal(false);
+  protected readonly calViewYear = signal(new Date().getFullYear());
+  protected readonly calViewMonth = signal(new Date().getMonth()); // 0-based
+  protected readonly selectedDate = signal<Date | null>(null);
+
+  protected readonly monthNames = [
+    'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+    'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre',
+  ];
+  protected readonly dayLabels = ['Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa', 'Di'];
+
+  protected readonly calendarDays = computed(() => {
+    const year = this.calViewYear();
+    const month = this.calViewMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    // Monday = 0 ... Sunday = 6
+    let startDow = firstDay.getDay() - 1;
+    if (startDow < 0) startDow = 6;
+    const days: (number | null)[] = [];
+    for (let i = 0; i < startDow; i++) days.push(null);
+    for (let d = 1; d <= lastDay.getDate(); d++) days.push(d);
+    return days;
+  });
+
+  protected readonly calendarYears = computed(() => {
+    const current = new Date().getFullYear();
+    const years: number[] = [];
+    for (let y = current; y >= current - 100; y--) years.push(y);
+    return years;
+  });
 
   constructor(private fb: FormBuilder) {
     this.personalForm = this.fb.group({
@@ -101,5 +134,75 @@ export class Adhesion {
   protected isFieldInvalid(form: FormGroup, field: string): boolean {
     const control = form.get(field);
     return !!control && control.invalid && control.touched;
+  }
+
+  // ── Calendar methods ──
+  protected toggleCalendar(): void {
+    this.calendarOpen.update(v => !v);
+  }
+
+  protected calPrevMonth(): void {
+    if (this.calViewMonth() === 0) {
+      this.calViewMonth.set(11);
+      this.calViewYear.update(y => y - 1);
+    } else {
+      this.calViewMonth.update(m => m - 1);
+    }
+  }
+
+  protected calNextMonth(): void {
+    if (this.calViewMonth() === 11) {
+      this.calViewMonth.set(0);
+      this.calViewYear.update(y => y + 1);
+    } else {
+      this.calViewMonth.update(m => m + 1);
+    }
+  }
+
+  protected calSelectDay(day: number): void {
+    const date = new Date(this.calViewYear(), this.calViewMonth(), day);
+    this.selectedDate.set(date);
+    // Format as YYYY-MM-DD for the form control
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    this.personalForm.get('dateOfBirth')?.setValue(`${yyyy}-${mm}-${dd}`);
+    this.calendarOpen.set(false);
+  }
+
+  protected calIsSelected(day: number): boolean {
+    const sel = this.selectedDate();
+    if (!sel) return false;
+    return sel.getFullYear() === this.calViewYear()
+      && sel.getMonth() === this.calViewMonth()
+      && sel.getDate() === day;
+  }
+
+  protected calIsToday(day: number): boolean {
+    const today = new Date();
+    return today.getFullYear() === this.calViewYear()
+      && today.getMonth() === this.calViewMonth()
+      && today.getDate() === day;
+  }
+
+  protected calIsFuture(day: number): boolean {
+    const date = new Date(this.calViewYear(), this.calViewMonth(), day);
+    return date > new Date();
+  }
+
+  protected onCalYearChange(event: Event): void {
+    const val = +(event.target as HTMLSelectElement).value;
+    this.calViewYear.set(val);
+  }
+
+  protected onCalMonthChange(event: Event): void {
+    const val = +(event.target as HTMLSelectElement).value;
+    this.calViewMonth.set(val);
+  }
+
+  protected get formattedDate(): string {
+    const sel = this.selectedDate();
+    if (!sel) return '';
+    return `${String(sel.getDate()).padStart(2, '0')}/${String(sel.getMonth() + 1).padStart(2, '0')}/${sel.getFullYear()}`;
   }
 }

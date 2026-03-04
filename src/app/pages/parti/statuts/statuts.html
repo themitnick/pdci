@@ -1,13 +1,18 @@
 <div>
-  <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-8">Statuts officiels</h2>
+  <!-- Section header -->
+  <div class="mb-10">
+    <div class="h-1 w-12 bg-primary mb-4"></div>
+    <h2 class="text-lg font-black uppercase tracking-wider text-gray-900 mb-2">Statuts officiels</h2>
+    <p class="text-sm text-gray-500">Les règles fondamentales qui régissent le fonctionnement du PDCI-RDA.</p>
+  </div>
 
   <!-- Download banner -->
-  <div class="bg-primary-light border border-primary/20 rounded-xl p-6 mb-8 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+  <div class="bg-gray-900 rounded-lg p-6 mb-8 flex flex-col sm:flex-row items-start sm:items-center gap-4">
     <div class="flex-1">
-      <h3 class="text-base font-semibold text-gray-900 mb-1">Télécharger les statuts complets</h3>
-      <p class="text-sm text-gray-600">Dernière révision : {{ lastRevision }} — Format PDF, 2.4 Mo</p>
+      <h3 class="text-base font-bold text-white mb-1">Télécharger les statuts complets</h3>
+      <p class="text-sm text-white/60">Dernière révision : {{ lastRevision }} — Format PDF, 2.4 Mo</p>
     </div>
-    <button class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-all shrink-0">
+    <button class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-bold uppercase tracking-wider rounded-md bg-primary text-white hover:bg-primary-dark transition-all shrink-0">
       <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
       Télécharger PDF
     </button>
@@ -16,9 +21,9 @@
   <!-- Chapters accordion -->
   <div class="space-y-3">
     @for (chapter of chapters; track chapter.title) {
-      <details class="group bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <details class="group bg-white rounded-lg border border-gray-200 overflow-hidden">
         <summary class="flex items-center justify-between p-5 cursor-pointer hover:bg-gray-50 transition-colors">
-          <span class="text-base font-semibold text-gray-900">{{ chapter.title }}</span>
+          <span class="text-sm font-bold text-gray-900">{{ chapter.title }}</span>
           <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
         </summary>
         <div class="px-5 pb-5 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-4">

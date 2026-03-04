@@ -1,8 +1,10 @@
 <div>
   <!-- Vision Statement -->
-  <div class="bg-primary rounded-2xl p-8 md:p-12 text-white mb-12">
-    <h2 class="text-2xl md:text-3xl font-bold mb-6">Notre Vision</h2>
-    <p class="text-lg md:text-xl leading-relaxed text-white/90 max-w-3xl">
+  <div class="relative bg-gray-900 rounded-lg p-8 md:p-12 text-white mb-12 overflow-hidden">
+    <div class="absolute bottom-0 left-0 right-0 h-1 bg-primary"></div>
+    <p class="text-xs font-black uppercase tracking-[0.25em] text-primary mb-4">Notre ambition</p>
+    <h2 class="text-2xl md:text-3xl font-black text-white mb-6">Notre Vision</h2>
+    <p class="text-base md:text-lg leading-relaxed text-white/80 max-w-3xl">
       Le PDCI-RDA ambitionne de construire une Côte d'Ivoire moderne, prospère et réconciliée avec elle-même.
       Un pays où chaque citoyen a accès à l'éducation, à la santé, à l'emploi et à la justice.
       Un pays leader en Afrique de l'Ouest, ancré dans les valeurs démocratiques et ouvert sur le monde.
@@ -10,12 +12,15 @@
   </div>
 
   <!-- Values Grid -->
-  <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-8">Nos Valeurs fondamentales</h2>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div class="mb-8">
+    <div class="h-1 w-12 bg-primary mb-4"></div>
+    <h2 class="text-lg font-black uppercase tracking-wider text-gray-900">Nos Valeurs fondamentales</h2>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
     @for (value of values; track value.title) {
-      <div class="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg hover:border-primary/30 hover:-translate-y-1 transition-all duration-300">
-        <span class="text-3xl mb-4 block">{{ value.icon }}</span>
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ value.title }}</h3>
+      <div class="bg-white rounded-lg border border-gray-200 p-6 hover:border-primary/30 transition-colors group">
+        <div class="flex items-center justify-center w-10 h-10 rounded-md bg-gray-100 text-xl mb-4 group-hover:bg-primary/10 transition-colors">{{ value.icon }}</div>
+        <h3 class="text-base font-bold text-gray-900 mb-2">{{ value.title }}</h3>
         <p class="text-sm text-gray-600 leading-relaxed">{{ value.description }}</p>
       </div>
     }

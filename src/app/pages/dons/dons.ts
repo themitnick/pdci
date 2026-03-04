@@ -25,15 +25,23 @@ export class Dons {
   ];
 
   protected readonly paymentMethods = [
-    { id: 'orange', label: 'Orange Money', icon: '📱' },
-    { id: 'mtn', label: 'MTN Money', icon: '📱' },
-    { id: 'wave', label: 'Wave', icon: '📱' },
-    { id: 'card', label: 'Carte bancaire', icon: '💳' },
-    { id: 'transfer', label: 'Virement bancaire', icon: '🏦' },
+    { id: 'mobile_money', label: 'Mobile Money', image: 'payments/Orange_Money.png' },
+    { id: 'card', label: 'Carte bancaire', image: 'payments/Card-icon.png' },
+    { id: 'transfer', label: 'Virement bancaire', image: '' },
+    { id: 'paypal', label: 'PayPal', image: 'payments/paypal-icon.png' },
   ];
 
-  protected readonly selectedPayment = signal('orange');
+  protected readonly mobileOperators = [
+    { id: 'orange', label: 'Orange Money', image: 'payments/Orange_Money.png' },
+    { id: 'mtn', label: 'MTN Money', image: 'payments/mtn-mobile.png' },
+    { id: 'moov', label: 'Moov Money', image: 'payments/moov-money.jpeg' },
+    { id: 'wave', label: 'Wave', image: 'payments/wave.png' },
+  ];
+
+  protected readonly selectedPayment = signal('mobile_money');
+  protected readonly selectedOperator = signal('orange');
   protected donorForm: FormGroup;
+  protected paymentForm: FormGroup;
 
   protected readonly finalAmount = computed(() => {
     if (this.selectedAmount() !== null) return this.selectedAmount()!;
@@ -49,6 +57,20 @@ export class Dons {
       phone: ['', [Validators.required]],
       anonymous: [false],
       receiptNeeded: [true],
+    });
+
+    this.paymentForm = this.fb.group({
+      // Mobile money
+      mobilePhone: [''],
+      // Card
+      cardNumber: [''],
+      cardExpiry: [''],
+      cardCvv: [''],
+      cardName: [''],
+      // Transfer
+      transferRef: [''],
+      // PayPal
+      paypalEmail: [''],
     });
   }
 
@@ -84,6 +106,10 @@ export class Dons {
 
   protected selectPayment(id: string): void {
     this.selectedPayment.set(id);
+  }
+
+  protected selectOperator(id: string): void {
+    this.selectedOperator.set(id);
   }
 
   protected submit(): void {
