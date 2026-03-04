@@ -1,13 +1,21 @@
 import { Component, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-crm-parametres',
   standalone: true,
+  imports: [FormsModule],
   templateUrl: './parametres.html',
   styleUrl: './parametres.scss',
 })
 export class CrmParametres {
   protected readonly activeTab = signal('profil');
+  protected readonly showNewRoleForm = signal(false);
+  protected readonly showNewRegionForm = signal(false);
+  protected readonly createSuccess = signal(false);
+
+  protected newRole = { nom: '', description: '' };
+  protected newRegion = { nom: '', code: '', responsable: '' };
 
   protected readonly tabs = [
     { id: 'profil', label: 'Profil', icon: 'user' },
@@ -43,5 +51,34 @@ export class CrmParametres {
 
   protected toggleNotif(index: number): void {
     this.notifSettings[index].enabled = !this.notifSettings[index].enabled;
+  }
+
+  protected openNewRoleForm(): void {
+    this.newRole = { nom: '', description: '' };
+    this.createSuccess.set(false);
+    this.showNewRoleForm.set(true);
+  }
+
+  protected submitNewRole(): void {
+    if (!this.newRole.nom || !this.newRole.description) return;
+    this.roles.push({ nom: this.newRole.nom, description: this.newRole.description, membres: 0 });
+    this.showNewRoleForm.set(false);
+  }
+
+  protected openNewRegionForm(): void {
+    this.newRegion = { nom: '', code: '', responsable: '' };
+    this.createSuccess.set(false);
+    this.showNewRegionForm.set(true);
+  }
+
+  protected submitNewRegion(): void {
+    if (!this.newRegion.nom || !this.newRegion.code) return;
+    this.regionList.push({
+      nom: this.newRegion.nom,
+      code: this.newRegion.code.toUpperCase(),
+      sections: 0,
+      responsable: this.newRegion.responsable || 'Non assigné',
+    });
+    this.showNewRegionForm.set(false);
   }
 }

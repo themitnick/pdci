@@ -25,7 +25,7 @@ export class Dons {
   ];
 
   protected readonly paymentMethods = [
-    { id: 'mobile_money', label: 'Mobile Money', image: 'payments/Orange_Money.png' },
+    { id: 'mobile_money', label: 'Mobile Money', image: 'payments/Operateurs-Mobile-Money.jpg' },
     { id: 'card', label: 'Carte bancaire', image: 'payments/Card-icon.png' },
     { id: 'transfer', label: 'Virement bancaire', image: '' },
     { id: 'paypal', label: 'PayPal', image: 'payments/paypal-icon.png' },

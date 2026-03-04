@@ -1,5 +1,6 @@
 import { Component, signal, computed } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 interface Cotisation {
   id: number;
@@ -15,7 +16,7 @@ interface Cotisation {
 @Component({
   selector: 'app-crm-cotisations',
   standalone: true,
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, FormsModule],
   templateUrl: './cotisations.html',
   styleUrl: './cotisations.scss',
 })
@@ -24,6 +25,15 @@ export class CrmCotisations {
   protected readonly selectedPeriode = signal('');
   protected readonly currentPage = signal(1);
   protected readonly itemsPerPage = 10;
+  protected readonly showCreateForm = signal(false);
+  protected readonly createSuccess = signal(false);
+
+  protected readonly modesPaiement = ['Mobile Money', 'Espèces', 'Virement', 'Carte bancaire'];
+  protected readonly regionOptions = ['Abidjan', 'Yamoussoukro', 'Bouaké', 'Daloa', 'San Pedro', 'Korhogo', 'Man', 'Gagnoa'];
+
+  protected newCotisation = {
+    militant: '', region: '', montant: 5000, periode: '', modePaiement: 'Mobile Money',
+  };
 
   protected readonly periodes = ['Janvier 2025', 'Février 2025', 'Mars 2025', 'Avril 2025', 'Mai 2025', 'Juin 2025'];
 
@@ -88,5 +98,33 @@ export class CrmCotisations {
 
   protected goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages()) this.currentPage.set(page);
+  }
+
+  protected openCreateForm(): void {
+    this.newCotisation = { militant: '', region: '', montant: 5000, periode: '', modePaiement: 'Mobile Money' };
+    this.createSuccess.set(false);
+    this.showCreateForm.set(true);
+  }
+
+  protected closeCreateForm(): void {
+    this.showCreateForm.set(false);
+  }
+
+  protected submitCreateForm(): void {
+    if (!this.newCotisation.militant || !this.newCotisation.region || !this.newCotisation.periode) return;
+    const today = new Date().toISOString().split('T')[0];
+    const newId = Math.max(...this.cotisations.map(c => c.id)) + 1;
+    this.cotisations.push({
+      id: newId,
+      militant: this.newCotisation.militant,
+      region: this.newCotisation.region,
+      montant: this.newCotisation.montant || 5000,
+      periode: this.newCotisation.periode,
+      datePaiement: today,
+      statut: 'paye',
+      modePaiement: this.newCotisation.modePaiement,
+    });
+    this.createSuccess.set(true);
+    setTimeout(() => this.showCreateForm.set(false), 1500);
   }
 }

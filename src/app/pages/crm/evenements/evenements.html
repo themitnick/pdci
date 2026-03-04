@@ -24,7 +24,7 @@
     <h1 class="text-2xl font-bold text-gray-900">Événements internes</h1>
     <p class="text-sm text-gray-500 mt-1">{{ filteredEvents().length }} événements</p>
   </div>
-  <button class="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors">
+  <button (click)="openCreateForm()" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors">
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
     Nouvel événement
   </button>
@@ -218,3 +218,139 @@
     </table>
   </div>
 </div>
+
+<!-- Create Event Slide-over -->
+@if (showCreateForm()) {
+  <div class="fixed inset-0 z-50 flex justify-end">
+    <div class="absolute inset-0 bg-black/40" (click)="closeCreateForm()"></div>
+    <div class="relative w-full max-w-lg bg-white shadow-2xl overflow-y-auto">
+      <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
+        <div>
+          <h2 class="text-lg font-bold text-gray-900">Nouvel événement</h2>
+          <p class="text-xs text-gray-500 mt-0.5">Planifiez un nouvel événement du parti</p>
+        </div>
+        <button (click)="closeCreateForm()" class="p-1.5 rounded-lg hover:bg-gray-100">
+          <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      @if (createSuccess()) {
+        <div class="p-6 flex flex-col items-center justify-center gap-4 min-h-[300px]">
+          <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <p class="text-lg font-semibold text-gray-900">Événement créé avec succès !</p>
+          <p class="text-sm text-gray-500">L'événement a été ajouté en statut « Planifié ».</p>
+        </div>
+      } @else {
+        <form (submit)="$event.preventDefault(); submitCreateForm()" class="p-6 space-y-5">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Titre de l'événement <span class="text-red-500">*</span></label>
+            <input type="text" [(ngModel)]="newEvent.titre" name="titre" required class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" placeholder="Ex: Bureau Politique élargi">
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Type <span class="text-red-500">*</span></label>
+              <select [(ngModel)]="newEvent.type" name="type" class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary bg-white">
+                <option value="reunion">Réunion</option>
+                <option value="meeting">Meeting</option>
+                <option value="formation">Formation</option>
+                <option value="ceremonie">Cérémonie</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Capacité</label>
+              <input type="number" [(ngModel)]="newEvent.capacite" name="capacite" class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" placeholder="100">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Date <span class="text-red-500">*</span></label>
+              <div class="relative">
+                <button type="button" (click)="toggleCalendar()"
+                  class="w-full flex items-center justify-between px-3 py-2.5 text-sm border rounded-lg outline-none transition-all bg-white text-left"
+                  [class]="calendarOpen() ? 'border-primary ring-2 ring-primary/20' : 'border-gray-300 hover:border-gray-400'">
+                  <span [class]="formattedEventDate ? 'text-gray-900' : 'text-gray-400'">{{ formattedEventDate || 'JJ/MM/AAAA' }}</span>
+                  <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                </button>
+                @if (calendarOpen()) {
+                  <div class="absolute z-50 top-full left-0 mt-2 w-[300px] bg-white rounded-lg border border-gray-200 shadow-xl p-3 animate-fade-in">
+                    <div class="flex items-center justify-between mb-2">
+                      <button type="button" (click)="calPrevMonth()" class="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 transition-colors">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                      </button>
+                      <div class="flex items-center gap-1">
+                        <select [value]="calViewMonth()" (change)="onCalMonthChange($event)" class="text-xs font-bold text-gray-900 bg-transparent border-none outline-none cursor-pointer">
+                          @for (month of monthNames; track month; let i = $index) { <option [value]="i">{{ month }}</option> }
+                        </select>
+                        <select [value]="calViewYear()" (change)="onCalYearChange($event)" class="text-xs font-bold text-gray-900 bg-transparent border-none outline-none cursor-pointer">
+                          @for (year of calendarYears(); track year) { <option [value]="year">{{ year }}</option> }
+                        </select>
+                      </div>
+                      <button type="button" (click)="calNextMonth()" class="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 transition-colors">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                      </button>
+                    </div>
+                    <div class="grid grid-cols-7 mb-1">
+                      @for (d of dayLabels; track d) {
+                        <div class="text-center text-[10px] font-bold uppercase tracking-wider text-gray-400 py-1">{{ d }}</div>
+                      }
+                    </div>
+                    <div class="grid grid-cols-7">
+                      @for (day of calendarDays(); track $index) {
+                        @if (day === null) { <div></div> } @else {
+                          <button type="button" (click)="calSelectDay(day)"
+                            class="h-8 w-full flex items-center justify-center text-xs rounded-md transition-all"
+                            [class]="calIsSelected(day) ? 'bg-primary text-white font-bold' : calIsToday(day) ? 'bg-primary/10 text-primary font-bold hover:bg-primary/20' : 'text-gray-700 hover:bg-gray-100'">
+                            {{ day }}
+                          </button>
+                        }
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Heure</label>
+              <input type="time" [(ngModel)]="newEvent.heure" name="heure" class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Lieu <span class="text-red-500">*</span></label>
+            <input type="text" [(ngModel)]="newEvent.lieu" name="lieu" required class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" placeholder="Ex: Siège du parti, Cocody">
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Région <span class="text-red-500">*</span></label>
+              <select [(ngModel)]="newEvent.region" name="region" required class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary bg-white">
+                <option value="">Sélectionner</option>
+                @for (r of regionOptions; track r) { <option [value]="r">{{ r }}</option> }
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Responsable</label>
+              <input type="text" [(ngModel)]="newEvent.responsable" name="responsable" class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" placeholder="Nom du responsable">
+            </div>
+          </div>
+
+          <div class="flex gap-3 pt-2">
+            <button type="submit" class="flex-1 py-2.5 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors">
+              <span class="inline-flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Créer l'événement
+              </span>
+            </button>
+            <button type="button" (click)="closeCreateForm()" class="px-6 py-2.5 text-sm font-semibold rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+              Annuler
+            </button>
+          </div>
+        </form>
+      }
+    </div>
+  </div>
+}

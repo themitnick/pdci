@@ -1,5 +1,6 @@
 import { Component, signal, computed } from '@angular/core';
 import { DecimalPipe, PercentPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 interface CrmEvent {
   id: number;
@@ -26,7 +27,7 @@ interface RegionStat {
 @Component({
   selector: 'app-crm-evenements',
   standalone: true,
-  imports: [DecimalPipe, PercentPipe],
+  imports: [DecimalPipe, PercentPipe, FormsModule],
   templateUrl: './evenements.html',
   styleUrl: './evenements.scss',
 })
@@ -35,6 +36,74 @@ export class CrmEvenements {
   protected readonly selectedStatut = signal('');
   protected readonly selectedRegion = signal('');
   protected readonly viewMode = signal<'list' | 'grid'>('list');
+  protected readonly showCreateForm = signal(false);
+  protected readonly createSuccess = signal(false);
+
+  protected readonly regionOptions = ['Abidjan', 'Yamoussoukro', 'Bouaké', 'Daloa', 'San Pedro', 'Korhogo', 'Man', 'Gagnoa'];
+
+  protected newEvent = {
+    titre: '', type: 'reunion' as CrmEvent['type'], date: '', heure: '10:00',
+    lieu: '', region: '', capacite: 100, responsable: '',
+  };
+
+  // ── Calendar date picker state ──
+  protected readonly calendarOpen = signal(false);
+  protected readonly calViewYear = signal(new Date().getFullYear());
+  protected readonly calViewMonth = signal(new Date().getMonth());
+  protected readonly selectedDate = signal<Date | null>(null);
+  protected readonly monthNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+  protected readonly dayLabels = ['Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa', 'Di'];
+  protected readonly calendarDays = computed(() => {
+    const year = this.calViewYear();
+    const month = this.calViewMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    let startDow = firstDay.getDay() - 1;
+    if (startDow < 0) startDow = 6;
+    const days: (number | null)[] = [];
+    for (let i = 0; i < startDow; i++) days.push(null);
+    for (let d = 1; d <= lastDay.getDate(); d++) days.push(d);
+    return days;
+  });
+  protected readonly calendarYears = computed(() => {
+    const current = new Date().getFullYear();
+    const years: number[] = [];
+    for (let y = current + 5; y >= current - 10; y--) years.push(y);
+    return years;
+  });
+
+  protected toggleCalendar(): void { this.calendarOpen.update(v => !v); }
+  protected calPrevMonth(): void {
+    if (this.calViewMonth() === 0) { this.calViewMonth.set(11); this.calViewYear.update(y => y - 1); } else { this.calViewMonth.update(m => m - 1); }
+  }
+  protected calNextMonth(): void {
+    if (this.calViewMonth() === 11) { this.calViewMonth.set(0); this.calViewYear.update(y => y + 1); } else { this.calViewMonth.update(m => m + 1); }
+  }
+  protected calSelectDay(day: number): void {
+    const date = new Date(this.calViewYear(), this.calViewMonth(), day);
+    this.selectedDate.set(date);
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    this.newEvent.date = `${yyyy}-${mm}-${dd}`;
+    this.calendarOpen.set(false);
+  }
+  protected calIsSelected(day: number): boolean {
+    const sel = this.selectedDate();
+    if (!sel) return false;
+    return sel.getFullYear() === this.calViewYear() && sel.getMonth() === this.calViewMonth() && sel.getDate() === day;
+  }
+  protected calIsToday(day: number): boolean {
+    const today = new Date();
+    return today.getFullYear() === this.calViewYear() && today.getMonth() === this.calViewMonth() && today.getDate() === day;
+  }
+  protected onCalYearChange(event: Event): void { this.calViewYear.set(+(event.target as HTMLSelectElement).value); }
+  protected onCalMonthChange(event: Event): void { this.calViewMonth.set(+(event.target as HTMLSelectElement).value); }
+  protected get formattedEventDate(): string {
+    const sel = this.selectedDate();
+    if (!sel) return '';
+    return `${String(sel.getDate()).padStart(2, '0')}/${String(sel.getMonth() + 1).padStart(2, '0')}/${sel.getFullYear()}`;
+  }
 
   protected readonly events: CrmEvent[] = [
     { id: 1, titre: 'Bureau Politique élargi', type: 'reunion', date: '2025-07-15', heure: '10:00', lieu: 'Siège du parti, Cocody', region: 'Abidjan', participants: 85, inscrits: 100, capacite: 120, statut: 'planifie', responsable: 'Kokora Sébastien' },
@@ -130,5 +199,38 @@ export class CrmEvenements {
 
   protected getPresenceRate(e: CrmEvent): number {
     return e.inscrits > 0 ? e.participants / e.inscrits : 0;
+  }
+
+  protected openCreateForm(): void {
+    this.newEvent = { titre: '', type: 'reunion', date: '', heure: '10:00', lieu: '', region: '', capacite: 100, responsable: '' };
+    this.selectedDate.set(null);
+    this.calendarOpen.set(false);
+    this.createSuccess.set(false);
+    this.showCreateForm.set(true);
+  }
+
+  protected closeCreateForm(): void {
+    this.showCreateForm.set(false);
+  }
+
+  protected submitCreateForm(): void {
+    if (!this.newEvent.titre || !this.newEvent.date || !this.newEvent.region || !this.newEvent.lieu) return;
+    const newId = Math.max(...this.events.map(e => e.id)) + 1;
+    this.events.push({
+      id: newId,
+      titre: this.newEvent.titre,
+      type: this.newEvent.type,
+      date: this.newEvent.date,
+      heure: this.newEvent.heure,
+      lieu: this.newEvent.lieu,
+      region: this.newEvent.region,
+      participants: 0,
+      inscrits: 0,
+      capacite: this.newEvent.capacite || 100,
+      statut: 'planifie',
+      responsable: this.newEvent.responsable || 'Non assigné',
+    });
+    this.createSuccess.set(true);
+    setTimeout(() => this.showCreateForm.set(false), 1500);
   }
 }

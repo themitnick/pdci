@@ -31,13 +31,28 @@ export class Adhesion {
   ];
 
   protected readonly paymentMethods = [
-    { id: 'orange', label: 'Orange Money', icon: '📱' },
-    { id: 'mtn', label: 'MTN Money', icon: '📱' },
-    { id: 'wave', label: 'Wave', icon: '📱' },
-    { id: 'card', label: 'Carte bancaire', icon: '💳' },
+    { id: 'mobile_money', label: 'Mobile Money', image: 'payments/Operateurs-Mobile-Money.jpg' },
+    { id: 'card', label: 'Carte bancaire', image: 'payments/Card-icon.png' },
+    { id: 'transfer', label: 'Virement bancaire', image: '' },
+    { id: 'paypal', label: 'PayPal', image: 'payments/paypal-icon.png' },
   ];
 
-  protected selectedPayment = signal('orange');
+  protected readonly mobileOperators = [
+    { id: 'orange', label: 'Orange Money', image: 'payments/Orange_Money.png' },
+    { id: 'mtn', label: 'MTN Money', image: 'payments/mtn-mobile.png' },
+    { id: 'moov', label: 'Moov Money', image: 'payments/moov-money.jpeg' },
+    { id: 'wave', label: 'Wave', image: 'payments/wave.png' },
+  ];
+
+  protected readonly idTypes = [
+    { value: 'cni', label: 'CNI (Carte Nationale d\'Identité)' },
+    { value: 'passeport', label: 'Passeport' },
+    { value: 'attestation', label: 'Attestation de Nationalité' },
+    { value: 'titre_sejour', label: 'Titre de séjour (Diaspora)' },
+  ];
+
+  protected selectedPayment = signal('mobile_money');
+  protected readonly selectedOperator = signal('orange');
 
   // ── Calendar date picker state ──
   protected readonly calendarOpen = signal(false);
@@ -79,6 +94,7 @@ export class Adhesion {
       dateOfBirth: ['', Validators.required],
       gender: ['', Validators.required],
       nationality: ['Ivoirienne', Validators.required],
+      idType: ['cni', Validators.required],
       idNumber: ['', Validators.required],
       phone: ['', [Validators.required, Validators.pattern(/^\+?[0-9]{8,15}$/)]],
       email: ['', Validators.email],
@@ -119,6 +135,10 @@ export class Adhesion {
 
   protected selectPayment(method: string): void {
     this.selectedPayment.set(method);
+  }
+
+  protected selectOperator(id: string): void {
+    this.selectedOperator.set(id);
   }
 
   protected submit(): void {

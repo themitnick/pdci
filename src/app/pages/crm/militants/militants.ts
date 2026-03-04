@@ -1,5 +1,6 @@
 import { Component, signal, computed } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 interface Militant {
   id: number;
@@ -25,7 +26,7 @@ interface Militant {
 @Component({
   selector: 'app-crm-militants',
   standalone: true,
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, FormsModule],
   templateUrl: './militants.html',
   styleUrl: './militants.scss',
 })
@@ -38,6 +39,79 @@ export class CrmMilitants {
   protected readonly itemsPerPage = 10;
   protected readonly selectedMilitant = signal<Militant | null>(null);
   protected readonly showDetail = signal(false);
+  protected readonly showCreateForm = signal(false);
+  protected readonly createSuccess = signal(false);
+
+  // Create form model
+  protected newMilitant = {
+    nom: '', prenom: '', email: '', phone: '', dateNaissance: '',
+    genre: 'H' as 'H' | 'F', region: '', section: '', localite: '',
+    role: 'Militant', statut: 'en_attente' as const,
+  };
+
+  protected readonly roleOptions = ['Militant', 'Agent Terrain', 'Responsable Section', 'Coordinateur Local', 'Responsable Régional'];
+
+  // ── Calendar date picker state ──
+  protected readonly calendarOpen = signal(false);
+  protected readonly calViewYear = signal(new Date().getFullYear());
+  protected readonly calViewMonth = signal(new Date().getMonth());
+  protected readonly selectedDate = signal<Date | null>(null);
+  protected readonly monthNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+  protected readonly dayLabels = ['Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa', 'Di'];
+  protected readonly calendarDays = computed(() => {
+    const year = this.calViewYear();
+    const month = this.calViewMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    let startDow = firstDay.getDay() - 1;
+    if (startDow < 0) startDow = 6;
+    const days: (number | null)[] = [];
+    for (let i = 0; i < startDow; i++) days.push(null);
+    for (let d = 1; d <= lastDay.getDate(); d++) days.push(d);
+    return days;
+  });
+  protected readonly calendarYears = computed(() => {
+    const current = new Date().getFullYear();
+    const years: number[] = [];
+    for (let y = current; y >= current - 100; y--) years.push(y);
+    return years;
+  });
+
+  protected toggleCalendar(): void { this.calendarOpen.update(v => !v); }
+  protected calPrevMonth(): void {
+    if (this.calViewMonth() === 0) { this.calViewMonth.set(11); this.calViewYear.update(y => y - 1); } else { this.calViewMonth.update(m => m - 1); }
+  }
+  protected calNextMonth(): void {
+    if (this.calViewMonth() === 11) { this.calViewMonth.set(0); this.calViewYear.update(y => y + 1); } else { this.calViewMonth.update(m => m + 1); }
+  }
+  protected calSelectDay(day: number): void {
+    const date = new Date(this.calViewYear(), this.calViewMonth(), day);
+    this.selectedDate.set(date);
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    this.newMilitant.dateNaissance = `${yyyy}-${mm}-${dd}`;
+    this.calendarOpen.set(false);
+  }
+  protected calIsSelected(day: number): boolean {
+    const sel = this.selectedDate();
+    if (!sel) return false;
+    return sel.getFullYear() === this.calViewYear() && sel.getMonth() === this.calViewMonth() && sel.getDate() === day;
+  }
+  protected calIsToday(day: number): boolean {
+    const today = new Date();
+    return today.getFullYear() === this.calViewYear() && today.getMonth() === this.calViewMonth() && today.getDate() === day;
+  }
+  protected calIsFuture(day: number): boolean {
+    return new Date(this.calViewYear(), this.calViewMonth(), day) > new Date();
+  }
+  protected onCalYearChange(event: Event): void { this.calViewYear.set(+(event.target as HTMLSelectElement).value); }
+  protected onCalMonthChange(event: Event): void { this.calViewMonth.set(+(event.target as HTMLSelectElement).value); }
+  protected get formattedDate(): string {
+    const sel = this.selectedDate();
+    if (!sel) return '';
+    return `${String(sel.getDate()).padStart(2, '0')}/${String(sel.getMonth() + 1).padStart(2, '0')}/${sel.getFullYear()}`;
+  }
 
   protected readonly regions = ['Abidjan', 'Yamoussoukro', 'Bouaké', 'Daloa', 'San Pedro', 'Korhogo', 'Man', 'Gagnoa'];
   protected readonly ageRanges = [
@@ -141,5 +215,51 @@ export class CrmMilitants {
 
   protected goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages()) this.currentPage.set(page);
+  }
+
+  protected openCreateForm(): void {
+    this.newMilitant = {
+      nom: '', prenom: '', email: '', phone: '', dateNaissance: '',
+      genre: 'H', region: '', section: '', localite: '',
+      role: 'Militant', statut: 'en_attente',
+    };
+    this.selectedDate.set(null);
+    this.calendarOpen.set(false);
+    this.createSuccess.set(false);
+    this.showCreateForm.set(true);
+  }
+
+  protected closeCreateForm(): void {
+    this.showCreateForm.set(false);
+  }
+
+  protected submitCreateForm(): void {
+    if (!this.newMilitant.nom || !this.newMilitant.prenom || !this.newMilitant.email || !this.newMilitant.region) return;
+    const today = new Date().toISOString().split('T')[0];
+    const birthYear = this.newMilitant.dateNaissance ? new Date(this.newMilitant.dateNaissance).getFullYear() : 2000;
+    const age = new Date().getFullYear() - birthYear;
+    const newId = Math.max(...this.militants.map(m => m.id)) + 1;
+    this.militants.push({
+      id: newId,
+      nom: this.newMilitant.nom,
+      prenom: this.newMilitant.prenom,
+      email: this.newMilitant.email,
+      phone: this.newMilitant.phone || '+225 00 00 00 00',
+      dateNaissance: this.newMilitant.dateNaissance || '2000-01-01',
+      age,
+      genre: this.newMilitant.genre,
+      region: this.newMilitant.region,
+      section: this.newMilitant.section || this.newMilitant.region + '-Centre',
+      localite: this.newMilitant.localite || 'Non renseigné',
+      dateAdhesion: today,
+      statut: 'en_attente',
+      role: this.newMilitant.role,
+      cotisationAJour: false,
+      derniereActivite: today,
+      nbCotisations: 0,
+      nbEvenements: 0,
+    });
+    this.createSuccess.set(true);
+    setTimeout(() => this.showCreateForm.set(false), 1500);
   }
 }

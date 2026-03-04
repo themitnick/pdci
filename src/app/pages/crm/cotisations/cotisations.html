@@ -4,10 +4,16 @@
     <h1 class="text-2xl font-bold text-gray-900">Cotisations</h1>
     <p class="text-sm text-gray-500 mt-1">Suivi et gestion des cotisations des militants</p>
   </div>
-  <button class="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors">
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-    Exporter le rapport
-  </button>
+  <div class="flex items-center gap-2">
+    <button class="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+      Exporter
+    </button>
+    <button (click)="openCreateForm()" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+      Enregistrer un paiement
+    </button>
+  </div>
 </div>
 
 <!-- Stats -->
@@ -101,3 +107,80 @@
     </div>
   }
 </div>
+
+<!-- Create Cotisation Slide-over -->
+@if (showCreateForm()) {
+  <div class="fixed inset-0 z-50 flex justify-end">
+    <div class="absolute inset-0 bg-black/40" (click)="closeCreateForm()"></div>
+    <div class="relative w-full max-w-lg bg-white shadow-2xl overflow-y-auto">
+      <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
+        <div>
+          <h2 class="text-lg font-bold text-gray-900">Enregistrer un paiement</h2>
+          <p class="text-xs text-gray-500 mt-0.5">Saisissez les informations de la cotisation</p>
+        </div>
+        <button (click)="closeCreateForm()" class="p-1.5 rounded-lg hover:bg-gray-100">
+          <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      @if (createSuccess()) {
+        <div class="p-6 flex flex-col items-center justify-center gap-4 min-h-[300px]">
+          <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <p class="text-lg font-semibold text-gray-900">Paiement enregistré !</p>
+          <p class="text-sm text-gray-500">La cotisation a été marquée comme payée.</p>
+        </div>
+      } @else {
+        <form (submit)="$event.preventDefault(); submitCreateForm()" class="p-6 space-y-5">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nom du militant <span class="text-red-500">*</span></label>
+            <input type="text" [(ngModel)]="newCotisation.militant" name="militant" required class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" placeholder="Ex: Koné Aminata">
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Région <span class="text-red-500">*</span></label>
+              <select [(ngModel)]="newCotisation.region" name="region" required class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary bg-white">
+                <option value="">Sélectionner</option>
+                @for (r of regionOptions; track r) { <option [value]="r">{{ r }}</option> }
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Période <span class="text-red-500">*</span></label>
+              <select [(ngModel)]="newCotisation.periode" name="periode" required class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary bg-white">
+                <option value="">Sélectionner</option>
+                @for (p of periodes; track p) { <option [value]="p">{{ p }}</option> }
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Montant (FCFA)</label>
+              <input type="number" [(ngModel)]="newCotisation.montant" name="montant" class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" placeholder="5000">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Mode de paiement</label>
+              <select [(ngModel)]="newCotisation.modePaiement" name="modePaiement" class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary bg-white">
+                @for (m of modesPaiement; track m) { <option [value]="m">{{ m }}</option> }
+              </select>
+            </div>
+          </div>
+
+          <div class="flex gap-3 pt-2">
+            <button type="submit" class="flex-1 py-2.5 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors">
+              <span class="inline-flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Enregistrer le paiement
+              </span>
+            </button>
+            <button type="button" (click)="closeCreateForm()" class="px-6 py-2.5 text-sm font-semibold rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+              Annuler
+            </button>
+          </div>
+        </form>
+      }
+    </div>
+  </div>
+}
