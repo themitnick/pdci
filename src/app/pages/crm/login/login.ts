@@ -1,10 +1,11 @@
 import { Component, signal, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth.service';
 
 @Component({
   selector: 'app-crm-login',
   standalone: true,
+  imports: [RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.scss',
   host: { class: 'flex items-center justify-center min-h-screen bg-gray-900' },
