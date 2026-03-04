@@ -1,0 +1,184 @@
+<!-- Header + period filter -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-900">Analyse & Intelligence Politique</h1>
+    <p class="text-sm text-gray-500 mt-1">Tableaux de bord dynamiques et outils d'aide à la décision</p>
+  </div>
+  <div class="flex items-center gap-2">
+    <select (change)="selectedPeriode.set($any($event.target).value)" class="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white">
+      <option value="3mois">3 derniers mois</option>
+      <option value="6mois">6 derniers mois</option>
+      <option value="12mois" selected>12 derniers mois</option>
+    </select>
+    <button class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+      Exporter PDF
+    </button>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="flex gap-1 p-1 bg-gray-100 rounded-lg w-fit mb-6">
+  <button (click)="selectedTab.set('vue_globale')" class="px-4 py-2 text-sm font-medium rounded-md transition-colors" [class]="selectedTab() === 'vue_globale' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'">
+    Vue globale
+  </button>
+  <button (click)="selectedTab.set('comparatif')" class="px-4 py-2 text-sm font-medium rounded-md transition-colors" [class]="selectedTab() === 'comparatif' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'">
+    Comparatif régional
+  </button>
+  <button (click)="selectedTab.set('decision')" class="px-4 py-2 text-sm font-medium rounded-md transition-colors" [class]="selectedTab() === 'decision' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'">
+    Aide à la décision
+  </button>
+</div>
+
+<!-- Vue globale -->
+@if (selectedTab() === 'vue_globale') {
+  <!-- KPI cards -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    @for (kpi of kpis; track kpi.label) {
+      <div class="bg-white rounded-xl border border-gray-200 p-5">
+        <div class="text-xs font-medium text-gray-500 mb-2">{{ kpi.label }}</div>
+        <div class="text-2xl font-bold" [class]="kpi.couleur">{{ kpi.valeur }}</div>
+      </div>
+    }
+  </div>
+
+  <!-- Adhesion vs. departure chart -->
+  <div class="bg-white rounded-xl border border-gray-200 p-5 mb-8">
+    <h3 class="font-semibold text-gray-900 mb-1">Évolution adhésions vs départs</h3>
+    <p class="text-xs text-gray-500 mb-4">12 derniers mois</p>
+    <div class="flex items-end gap-1 h-48">
+      @for (m of monthlyData; track m.mois) {
+        <div class="flex-1 flex flex-col items-center gap-1 group relative">
+          <!-- Adhesions bar -->
+          <div class="w-full flex flex-col items-center gap-0.5">
+            <div class="w-3/4 bg-green-400 rounded-t transition-all" [style.height.px]="(m.adhesions / maxAdhesion()) * 140"></div>
+            <div class="w-3/4 bg-red-300 rounded-b transition-all" [style.height.px]="(m.departs / maxAdhesion()) * 140"></div>
+          </div>
+          <span class="text-[10px] text-gray-400">{{ m.mois }}</span>
+          <!-- Tooltip -->
+          <div class="absolute bottom-full mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded-lg px-3 py-2 whitespace-nowrap z-10">
+            <div class="text-green-300">+{{ m.adhesions }} adhésions</div>
+            <div class="text-red-300">-{{ m.departs }} départs</div>
+            <div class="font-medium mt-1">Net: +{{ m.adhesions - m.departs }}</div>
+          </div>
+        </div>
+      }
+    </div>
+    <div class="flex items-center justify-center gap-6 mt-3">
+      <span class="flex items-center gap-1.5 text-xs text-gray-500"><span class="w-3 h-3 rounded bg-green-400"></span> Adhésions</span>
+      <span class="flex items-center gap-1.5 text-xs text-gray-500"><span class="w-3 h-3 rounded bg-red-300"></span> Départs</span>
+    </div>
+  </div>
+
+  <!-- Regional overview table -->
+  <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+    <div class="px-5 py-4 border-b border-gray-100">
+      <h3 class="font-semibold text-gray-900">Synthèse par région</h3>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="bg-gray-50/50 border-b border-gray-100">
+            <th class="text-left font-semibold text-gray-600 px-5 py-3">Région</th>
+            <th class="text-center font-semibold text-gray-600 px-5 py-3">Militants</th>
+            <th class="text-center font-semibold text-gray-600 px-5 py-3 hidden md:table-cell">Actifs</th>
+            <th class="text-center font-semibold text-gray-600 px-5 py-3 hidden lg:table-cell">Cotisations</th>
+            <th class="text-center font-semibold text-gray-600 px-5 py-3 hidden lg:table-cell">Adhésions</th>
+            <th class="text-center font-semibold text-gray-600 px-5 py-3">Taux activité</th>
+            <th class="text-center font-semibold text-gray-600 px-5 py-3">Tendance</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-50">
+          @for (r of regionsData; track r.region) {
+            <tr class="hover:bg-gray-50/50">
+              <td class="px-5 py-3 font-medium text-gray-900">{{ r.region }}</td>
+              <td class="px-5 py-3 text-center text-gray-700">{{ r.militants | number }}</td>
+              <td class="px-5 py-3 text-center text-green-600 hidden md:table-cell">{{ r.actifs | number }}</td>
+              <td class="px-5 py-3 text-center text-gray-700 hidden lg:table-cell">{{ r.cotisations | number }}</td>
+              <td class="px-5 py-3 text-center text-blue-600 hidden lg:table-cell">{{ r.adhesions }}</td>
+              <td class="px-5 py-3 text-center">
+                <div class="flex items-center justify-center gap-2">
+                  <div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div class="h-full rounded-full" [class]="r.tauxActivite >= 0.7 ? 'bg-green-500' : r.tauxActivite >= 0.5 ? 'bg-amber-500' : 'bg-red-500'" [style.width.%]="r.tauxActivite * 100"></div>
+                  </div>
+                  <span class="text-xs font-medium text-gray-600">{{ r.tauxActivite | percent:'1.0-0' }}</span>
+                </div>
+              </td>
+              <td class="px-5 py-3 text-center">
+                <span class="text-sm font-semibold" [class]="getTendanceIcon(r.tendance).color">{{ getTendanceIcon(r.tendance).icon }}</span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}
+
+<!-- Comparatif régional -->
+@if (selectedTab() === 'comparatif') {
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    @for (r of regionsData; track r.region) {
+      <div class="bg-white rounded-xl border border-gray-200 p-5">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-semibold text-gray-900">{{ r.region }}</h3>
+          <span class="text-sm font-semibold" [class]="getTendanceIcon(r.tendance).color">{{ getTendanceIcon(r.tendance).icon }} {{ r.tendance }}</span>
+        </div>
+        <!-- Metrics -->
+        <div class="grid grid-cols-3 gap-3 mb-4">
+          <div class="text-center">
+            <div class="text-lg font-bold text-gray-900">{{ r.militants | number }}</div>
+            <div class="text-[10px] text-gray-400">Militants</div>
+          </div>
+          <div class="text-center">
+            <div class="text-lg font-bold text-green-600">{{ r.actifs | number }}</div>
+            <div class="text-[10px] text-gray-400">Actifs</div>
+          </div>
+          <div class="text-center">
+            <div class="text-lg font-bold text-blue-600">{{ r.adhesions }}</div>
+            <div class="text-[10px] text-gray-400">Adhésions/an</div>
+          </div>
+        </div>
+        <!-- Activity bar -->
+        <div>
+          <div class="flex justify-between text-xs mb-1">
+            <span class="text-gray-500">Taux d'activité</span>
+            <span class="font-medium" [class]="r.tauxActivite >= 0.7 ? 'text-green-600' : 'text-amber-600'">{{ r.tauxActivite | percent:'1.0-0' }}</span>
+          </div>
+          <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full transition-all" [class]="r.tauxActivite >= 0.7 ? 'bg-green-500' : r.tauxActivite >= 0.5 ? 'bg-amber-500' : 'bg-red-500'" [style.width.%]="r.tauxActivite * 100"></div>
+          </div>
+        </div>
+        <!-- Sub-metrics -->
+        <div class="flex items-center gap-4 mt-3 text-xs text-gray-400">
+          <span>{{ r.evenements }} événements</span>
+          <span>{{ r.cotisations | number }} cotisations</span>
+        </div>
+      </div>
+    }
+  </div>
+}
+
+<!-- Aide à la décision -->
+@if (selectedTab() === 'decision') {
+  <div class="space-y-4">
+    <div class="bg-white rounded-xl border border-gray-200 p-5 mb-6">
+      <h3 class="font-semibold text-gray-900 mb-1">Outils d'aide à la décision</h3>
+      <p class="text-xs text-gray-500">Indicateurs clés et recommandations basés sur l'analyse des données du parti</p>
+    </div>
+    @for (ind of decisionIndicateurs; track ind.label) {
+      <div class="rounded-xl border p-5" [class]="getIndicateurStyle(ind.type).bg + ' ' + getIndicateurStyle(ind.type).border">
+        <div class="flex items-start gap-3">
+          <span class="text-2xl">{{ getIndicateurStyle(ind.type).icon }}</span>
+          <div class="flex-1">
+            <div class="flex items-center justify-between mb-1">
+              <h4 class="font-semibold text-gray-900">{{ ind.label }}</h4>
+              <span class="text-lg font-bold text-gray-900">{{ ind.valeur }}</span>
+            </div>
+            <p class="text-sm text-gray-600">{{ ind.detail }}</p>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}

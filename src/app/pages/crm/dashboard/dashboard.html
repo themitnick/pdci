@@ -1,0 +1,197 @@
+<!-- Page header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-900">Tableau de bord stratégique</h1>
+    <p class="text-sm text-gray-500 mt-1">Pilotage national en temps réel — Dernière actualisation il y a 3 min</p>
+  </div>
+  <div class="flex items-center gap-2">
+    <select class="px-3 py-2 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary bg-white">
+      <option>12 derniers mois</option>
+      <option>6 derniers mois</option>
+      <option>3 derniers mois</option>
+      <option>Ce mois</option>
+    </select>
+    <button class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+      Exporter
+    </button>
+  </div>
+</div>
+
+<!-- KPI Cards 6-col -->
+<div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3 mb-8">
+  @for (kpi of kpis; track kpi.label) {
+    <div class="bg-white rounded-xl border border-gray-200 p-4 hover:shadow-sm transition-shadow">
+      <div class="flex items-center justify-between mb-2">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center" [class]="kpi.bg">
+          @switch (kpi.icon) {
+            @case ('people') { <svg class="w-4 h-4" [class]="kpi.color" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg> }
+            @case ('active') { <svg class="w-4 h-4" [class]="kpi.color" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> }
+            @case ('money') { <svg class="w-4 h-4" [class]="kpi.color" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg> }
+            @case ('person_add') { <svg class="w-4 h-4" [class]="kpi.color" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg> }
+            @case ('percent') { <svg class="w-4 h-4" [class]="kpi.color" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> }
+            @case ('globe') { <svg class="w-4 h-4" [class]="kpi.color" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> }
+          }
+        </div>
+        <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded-full" [class]="kpi.positive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
+          {{ kpi.change }}
+        </span>
+      </div>
+      <div class="text-lg font-bold text-gray-900 leading-tight">{{ kpi.value }}</div>
+      <div class="text-[10px] text-gray-500 mt-0.5">{{ kpi.label }}</div>
+    </div>
+  }
+</div>
+
+<!-- Row: Adhésions chart + Carte thermique -->
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
+  <div class="xl:col-span-2 bg-white rounded-xl border border-gray-200 p-6">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h2 class="text-sm font-semibold text-gray-900">Évolution des adhésions</h2>
+        <p class="text-xs text-gray-400 mt-0.5">12 derniers mois — Total : 18 327</p>
+      </div>
+    </div>
+    <div class="flex items-end gap-1.5 h-48 bg-gradient-to-t from-primary/5 to-transparent rounded-lg p-3 pt-1">
+      @for (m of monthlyAdhesions; track m.mois; let i = $index) {
+        <div class="flex-1 flex flex-col items-center gap-1 h-full">
+          <span class="text-[9px] font-semibold text-gray-600">{{ m.valeur | number }}</span>
+          <div class="flex-1 w-full flex items-end">
+            <div class="w-full rounded-t transition-colors cursor-pointer relative group" [class]="i === monthlyAdhesions.length - 1 ? 'bg-primary shadow-md shadow-primary/30' : 'bg-primary/60 hover:bg-primary/80'" [style.height.%]="(m.valeur / maxAdhesion) * 100">
+              <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] px-2 py-1 rounded hidden group-hover:block whitespace-nowrap z-10">{{ m.valeur | number }} adhésions</div>
+            </div>
+          </div>
+          <span class="text-[9px] font-medium" [class]="i === monthlyAdhesions.length - 1 ? 'text-primary font-bold' : 'text-gray-400'">{{ m.mois }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl border border-gray-200 p-6">
+    <h2 class="text-sm font-semibold text-gray-900 mb-1">Carte thermique nationale</h2>
+    <p class="text-xs text-gray-400 mb-4">Densité de militants par région</p>
+    <div class="grid grid-cols-2 gap-2">
+      @for (r of regionData; track r.code) {
+        <div class="rounded-lg p-3 text-center cursor-pointer hover:opacity-90 transition-opacity" [class]="getHeatColor(r.heatLevel)">
+          <div class="text-xs font-bold">{{ r.code }}</div>
+          <div class="text-lg font-bold">{{ r.militants | number }}</div>
+          <div class="text-[10px] opacity-80">{{ r.nom }}</div>
+        </div>
+      }
+    </div>
+    <div class="flex items-center gap-3 mt-4 text-[10px] text-gray-500">
+      <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-primary"></span> Fort</span>
+      <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-primary/60"></span> Moyen</span>
+      <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-primary/30"></span> Faible</span>
+    </div>
+  </div>
+</div>
+
+<!-- Row: Démographie + Performance régionale -->
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
+  <div class="bg-white rounded-xl border border-gray-200 p-6">
+    <h2 class="text-sm font-semibold text-gray-900 mb-1">Répartition par tranche d'âge</h2>
+    <p class="text-xs text-gray-400 mb-5">Démographie des 45 213 militants</p>
+    <div class="flex rounded-full overflow-hidden h-4 mb-4">
+      @for (d of demographics; track d.tranche) {
+        <div class="h-full transition-all" [class]="d.color" [style.width.%]="d.pct"></div>
+      }
+    </div>
+    <div class="space-y-2.5">
+      @for (d of demographics; track d.tranche) {
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-sm shrink-0" [class]="d.color"></span>
+            <span class="text-sm text-gray-700">{{ d.tranche }}</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-medium text-gray-900">{{ d.count | number }}</span>
+            <span class="text-xs text-gray-400 w-8 text-right">{{ d.pct }}%</span>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl border border-gray-200 p-6">
+    <h2 class="text-sm font-semibold text-gray-900 mb-1">Performance régionale</h2>
+    <p class="text-xs text-gray-400 mb-4">Taux de cotisation et militants actifs</p>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-gray-100">
+            <th class="text-left text-xs font-semibold text-gray-500 pb-2">Région</th>
+            <th class="text-right text-xs font-semibold text-gray-500 pb-2">Militants</th>
+            <th class="text-right text-xs font-semibold text-gray-500 pb-2">Actifs</th>
+            <th class="text-right text-xs font-semibold text-gray-500 pb-2">Cotisation</th>
+            <th class="text-right text-xs font-semibold text-gray-500 pb-2">+/mois</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-50">
+          @for (r of regionData; track r.code) {
+            <tr class="hover:bg-gray-50/50">
+              <td class="py-2 font-medium text-gray-900">{{ r.nom }}</td>
+              <td class="py-2 text-right text-gray-600">{{ r.militants | number }}</td>
+              <td class="py-2 text-right text-gray-600">{{ r.actifs | number }}</td>
+              <td class="py-2 text-right">
+                <span class="font-medium" [class]="r.cotisationRate >= 0.7 ? 'text-green-600' : r.cotisationRate >= 0.5 ? 'text-amber-600' : 'text-red-500'">
+                  {{ r.cotisationRate | percent:'1.0-0' }}
+                </span>
+              </td>
+              <td class="py-2 text-right text-primary font-medium">+{{ r.adhesionsMois }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Row: Activité récente + Tâches -->
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+  <div class="xl:col-span-2 bg-white rounded-xl border border-gray-200">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+      <h2 class="text-sm font-semibold text-gray-900">Activité récente</h2>
+      <button class="text-xs text-primary font-medium hover:underline">Tout voir</button>
+    </div>
+    <div class="divide-y divide-gray-50">
+      @for (a of recentActivities; track a.id) {
+        <div class="flex items-center gap-3 px-5 py-3 hover:bg-gray-50 transition-colors">
+          <span class="inline-flex px-2 py-0.5 rounded text-[10px] font-semibold shrink-0" [class]="getActivityBadge(a.type).bg + ' ' + getActivityBadge(a.type).text">
+            {{ getActivityBadge(a.type).label }}
+          </span>
+          <p class="text-sm text-gray-700 truncate flex-1">{{ a.description }}</p>
+          <span class="text-xs text-gray-400 whitespace-nowrap shrink-0">{{ a.time }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl border border-gray-200">
+    <div class="px-5 py-4 border-b border-gray-100">
+      <h2 class="text-sm font-semibold text-gray-900">Tâches en attente</h2>
+    </div>
+    <div class="p-5 space-y-3">
+      @for (task of pendingTasks; track task.label) {
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-gray-600">{{ task.label }}</span>
+          <span
+            class="inline-flex items-center justify-center min-w-[28px] h-7 px-2 rounded-full text-xs font-bold"
+            [class]="task.color === 'amber' ? 'bg-amber-100 text-amber-700' :
+                      task.color === 'red' ? 'bg-red-100 text-red-700' :
+                      task.color === 'blue' ? 'bg-blue-100 text-blue-700' :
+                      task.color === 'teal' ? 'bg-teal-100 text-teal-700' :
+                      'bg-purple-100 text-purple-700'"
+          >
+            {{ task.count }}
+          </span>
+        </div>
+      }
+    </div>
+    <div class="px-5 pb-5">
+      <button class="w-full py-2 text-sm font-medium text-primary border border-primary/20 rounded-lg hover:bg-primary/5 transition-colors">
+        Voir toutes les tâches
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,103 @@
+<!-- Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-900">Cotisations</h1>
+    <p class="text-sm text-gray-500 mt-1">Suivi et gestion des cotisations des militants</p>
+  </div>
+  <button class="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+    Exporter le rapport
+  </button>
+</div>
+
+<!-- Stats -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+  @for (stat of stats; track stat.label) {
+    <div class="bg-white rounded-xl border border-gray-200 p-5">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center" [class]="stat.bg">
+          <svg class="w-5 h-5" [class]="stat.color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            @switch (stat.icon) {
+              @case ('banknotes') { <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/> }
+              @case ('clock') { <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/> }
+              @case ('chart') { <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/> }
+              @case ('alert') { <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/> }
+            }
+          </svg>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500 font-medium">{{ stat.label }}</p>
+          <p class="text-xl font-bold text-gray-900">{{ stat.value }}<span class="text-sm font-normal text-gray-400 ml-1">{{ stat.suffix }}</span></p>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+
+<!-- Filters -->
+<div class="bg-white rounded-xl border border-gray-200 p-4 mb-6">
+  <div class="flex flex-col sm:flex-row gap-3">
+    <select (change)="onPeriodeFilter($event)" class="flex-1 px-3 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 bg-white">
+      <option value="">Toutes les périodes</option>
+      @for (p of periodes; track p) {
+        <option [value]="p">{{ p }}</option>
+      }
+    </select>
+    <select (change)="onStatutFilter($event)" class="px-3 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 bg-white">
+      <option value="">Tous les statuts</option>
+      <option value="paye">Payé</option>
+      <option value="en_retard">En retard</option>
+      <option value="non_paye">Non payé</option>
+    </select>
+  </div>
+</div>
+
+<!-- Table -->
+<div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-gray-100 bg-gray-50/50">
+          <th class="text-left font-semibold text-gray-600 px-5 py-3">Militant</th>
+          <th class="text-left font-semibold text-gray-600 px-5 py-3 hidden md:table-cell">Région</th>
+          <th class="text-left font-semibold text-gray-600 px-5 py-3">Période</th>
+          <th class="text-right font-semibold text-gray-600 px-5 py-3">Montant</th>
+          <th class="text-left font-semibold text-gray-600 px-5 py-3 hidden lg:table-cell">Paiement</th>
+          <th class="text-left font-semibold text-gray-600 px-5 py-3">Statut</th>
+          <th class="text-right font-semibold text-gray-600 px-5 py-3 hidden md:table-cell">Date</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        @for (c of paginatedCotisations(); track c.id) {
+          <tr class="hover:bg-gray-50/50 transition-colors">
+            <td class="px-5 py-3 font-medium text-gray-900">{{ c.militant }}</td>
+            <td class="px-5 py-3 text-gray-600 hidden md:table-cell">{{ c.region }}</td>
+            <td class="px-5 py-3 text-gray-600">{{ c.periode }}</td>
+            <td class="px-5 py-3 text-right font-medium text-gray-900">{{ c.montant | number }} FCFA</td>
+            <td class="px-5 py-3 text-gray-500 hidden lg:table-cell">{{ c.modePaiement }}</td>
+            <td class="px-5 py-3">
+              <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold" [class]="getStatutBadge(c.statut).bg + ' ' + getStatutBadge(c.statut).text">
+                {{ getStatutBadge(c.statut).label }}
+              </span>
+            </td>
+            <td class="px-5 py-3 text-right text-gray-500 hidden md:table-cell">{{ c.datePaiement || '—' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (totalPages() > 1) {
+    <div class="flex items-center justify-between px-5 py-3 border-t border-gray-100">
+      <span class="text-xs text-gray-500">Page {{ currentPage() }} sur {{ totalPages() }}</span>
+      <div class="flex items-center gap-1">
+        <button (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1" class="p-1.5 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+          <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <button (click)="goToPage(currentPage() + 1)" [disabled]="currentPage() === totalPages()" class="p-1.5 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+          <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  }
+</div>

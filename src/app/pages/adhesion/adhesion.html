@@ -1,0 +1,267 @@
+<!-- Hero Banner -->
+<section class="bg-gradient-to-br from-primary to-primary-dark py-12 md:py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center text-white">
+    <h1 class="text-3xl md:text-4xl font-extrabold mb-3">Adhésion en ligne</h1>
+    <p class="text-base text-white/80 max-w-xl mx-auto">Rejoignez le PDCI-RDA et participez à la construction de la Côte d'Ivoire de demain</p>
+  </div>
+</section>
+
+@if (isComplete()) {
+  <!-- Success Screen -->
+  <section class="py-16 md:py-24">
+    <div class="max-w-lg mx-auto px-4 sm:px-6 text-center">
+      <div class="w-20 h-20 rounded-full bg-primary-light flex items-center justify-center mx-auto mb-6">
+        <svg class="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <h2 class="text-2xl font-bold text-gray-900 mb-3">Bienvenue au PDCI-RDA !</h2>
+      <p class="text-gray-600 mb-2">Votre demande d'adhésion a été enregistrée avec succès.</p>
+      <p class="text-sm text-gray-500 mb-8">Votre dossier est en cours de validation par votre coordination locale. Vous recevrez un SMS de confirmation sous 72h.</p>
+      <div class="bg-primary-light rounded-xl p-6 text-left mb-8">
+        <h3 class="text-sm font-semibold text-gray-900 mb-3">Récapitulatif</h3>
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between"><span class="text-gray-500">N° de dossier</span><span class="font-medium text-gray-900">PDCI-2026-ABJ-004521</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">Statut</span><span class="font-medium text-amber-600">En attente de validation</span></div>
+        </div>
+      </div>
+      <a routerLink="/" class="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-all no-underline">
+        Retour à l'accueil
+      </a>
+    </div>
+  </section>
+} @else {
+  <!-- Stepper + Form -->
+  <section class="py-10 md:py-16">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6">
+
+      <!-- Step indicator -->
+      <div class="flex items-center justify-between mb-10">
+        @for (step of steps; track step; let i = $index) {
+          <div class="flex items-center" [class.flex-1]="i < steps.length - 1">
+            <div class="flex flex-col items-center">
+              <div
+                class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all"
+                [class]="currentStep() > i + 1 ? 'bg-primary text-white' : currentStep() === i + 1 ? 'bg-primary text-white ring-4 ring-primary/20' : 'bg-gray-200 text-gray-500'"
+              >
+                @if (currentStep() > i + 1) {
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                } @else {
+                  {{ i + 1 }}
+                }
+              </div>
+              <span class="text-xs mt-1.5 text-center hidden sm:block" [class]="currentStep() >= i + 1 ? 'text-primary font-medium' : 'text-gray-400'">{{ step }}</span>
+            </div>
+            @if (i < steps.length - 1) {
+              <div class="flex-1 h-0.5 mx-2" [class]="currentStep() > i + 1 ? 'bg-primary' : 'bg-gray-200'"></div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Step 1: Personal Info -->
+      @if (currentStep() === 1) {
+        <div class="animate-fade-in">
+          <h2 class="text-xl font-bold text-gray-900 mb-6">Informations personnelles</h2>
+          <form [formGroup]="personalForm" class="space-y-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Nom <span class="text-red-500">*</span></label>
+                <input formControlName="lastName" type="text" placeholder="Votre nom"
+                  class="w-full px-4 py-3 text-sm border rounded-lg outline-none transition-all"
+                  [class]="isFieldInvalid(personalForm, 'lastName') ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20'">
+                @if (isFieldInvalid(personalForm, 'lastName')) {
+                  <p class="text-xs text-red-500 mt-1">Le nom est obligatoire</p>
+                }
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Prénoms <span class="text-red-500">*</span></label>
+                <input formControlName="firstName" type="text" placeholder="Vos prénoms"
+                  class="w-full px-4 py-3 text-sm border rounded-lg outline-none transition-all"
+                  [class]="isFieldInvalid(personalForm, 'firstName') ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20'">
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Date de naissance <span class="text-red-500">*</span></label>
+                <input formControlName="dateOfBirth" type="date"
+                  class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Genre <span class="text-red-500">*</span></label>
+                <select formControlName="gender"
+                  class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-white">
+                  <option value="">Sélectionner</option>
+                  <option value="M">Masculin</option>
+                  <option value="F">Féminin</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Numéro de pièce d'identité <span class="text-red-500">*</span></label>
+              <input formControlName="idNumber" type="text" placeholder="CNI, Passeport ou Carte consulaire"
+                class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Téléphone <span class="text-red-500">*</span></label>
+                <input formControlName="phone" type="tel" placeholder="+225 07 XX XX XX XX"
+                  class="w-full px-4 py-3 text-sm border rounded-lg outline-none transition-all"
+                  [class]="isFieldInvalid(personalForm, 'phone') ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20'">
+                @if (isFieldInvalid(personalForm, 'phone')) {
+                  <p class="text-xs text-red-500 mt-1">Numéro de téléphone invalide</p>
+                }
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
+                <input formControlName="email" type="email" placeholder="votre@email.com"
+                  class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Adresse de résidence <span class="text-red-500">*</span></label>
+              <input formControlName="address" type="text" placeholder="Votre adresse complète"
+                class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Profession</label>
+              <input formControlName="profession" type="text" placeholder="Votre profession"
+                class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+            </div>
+          </form>
+        </div>
+      }
+
+      <!-- Step 2: Section -->
+      @if (currentStep() === 2) {
+        <div class="animate-fade-in">
+          <h2 class="text-xl font-bold text-gray-900 mb-6">Choix de la section locale</h2>
+          <form [formGroup]="sectionForm" class="space-y-5">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Région <span class="text-red-500">*</span></label>
+              <select formControlName="region"
+                class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-white">
+                <option value="">Sélectionner votre région</option>
+                @for (region of regions; track region) {
+                  <option [value]="region">{{ region }}</option>
+                }
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Section locale <span class="text-red-500">*</span></label>
+              <input formControlName="section" type="text" placeholder="Nom de votre section"
+                class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+            </div>
+
+            <div class="bg-gray-50 rounded-xl p-5 space-y-4 mt-6">
+              <h3 class="text-sm font-semibold text-gray-900">Consentements obligatoires</h3>
+              <label class="flex items-start gap-3 cursor-pointer">
+                <input formControlName="acceptStatuts" type="checkbox" class="mt-0.5 w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary">
+                <span class="text-sm text-gray-600">J'accepte les statuts et le règlement intérieur du PDCI-RDA</span>
+              </label>
+              <label class="flex items-start gap-3 cursor-pointer">
+                <input formControlName="acceptData" type="checkbox" class="mt-0.5 w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary">
+                <span class="text-sm text-gray-600">J'autorise le traitement de mes données personnelles conformément à la politique de confidentialité</span>
+              </label>
+              <label class="flex items-start gap-3 cursor-pointer">
+                <input formControlName="certifyInfo" type="checkbox" class="mt-0.5 w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary">
+                <span class="text-sm text-gray-600">Je certifie l'exactitude des informations fournies</span>
+              </label>
+            </div>
+          </form>
+        </div>
+      }
+
+      <!-- Step 3: Recap -->
+      @if (currentStep() === 3) {
+        <div class="animate-fade-in">
+          <h2 class="text-xl font-bold text-gray-900 mb-6">Récapitulatif</h2>
+          <div class="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100">
+            <div class="p-5">
+              <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Informations personnelles</h3>
+              <dl class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                <div><dt class="text-gray-500">Nom</dt><dd class="font-medium text-gray-900">{{ personalForm.get('lastName')?.value }}</dd></div>
+                <div><dt class="text-gray-500">Prénoms</dt><dd class="font-medium text-gray-900">{{ personalForm.get('firstName')?.value }}</dd></div>
+                <div><dt class="text-gray-500">Téléphone</dt><dd class="font-medium text-gray-900">{{ personalForm.get('phone')?.value }}</dd></div>
+                <div><dt class="text-gray-500">Email</dt><dd class="font-medium text-gray-900">{{ personalForm.get('email')?.value || '—' }}</dd></div>
+                <div><dt class="text-gray-500">Adresse</dt><dd class="font-medium text-gray-900">{{ personalForm.get('address')?.value }}</dd></div>
+                <div><dt class="text-gray-500">Profession</dt><dd class="font-medium text-gray-900">{{ personalForm.get('profession')?.value || '—' }}</dd></div>
+              </dl>
+            </div>
+            <div class="p-5">
+              <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Section</h3>
+              <dl class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                <div><dt class="text-gray-500">Région</dt><dd class="font-medium text-gray-900">{{ sectionForm.get('region')?.value }}</dd></div>
+                <div><dt class="text-gray-500">Section</dt><dd class="font-medium text-gray-900">{{ sectionForm.get('section')?.value }}</dd></div>
+              </dl>
+            </div>
+            <div class="p-5">
+              <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Cotisation</h3>
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-600">Cotisation annuelle</span>
+                <span class="text-2xl font-bold text-primary">5 000 FCFA</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Step 4: Payment -->
+      @if (currentStep() === 4) {
+        <div class="animate-fade-in">
+          <h2 class="text-xl font-bold text-gray-900 mb-6">Paiement de la cotisation</h2>
+          <div class="bg-primary-light rounded-xl p-5 mb-6 flex items-center justify-between">
+            <span class="text-sm font-medium text-gray-700">Montant à payer</span>
+            <span class="text-2xl font-bold text-primary">5 000 FCFA</span>
+          </div>
+
+          <h3 class="text-sm font-semibold text-gray-900 mb-4">Choisissez votre mode de paiement</h3>
+          <div class="grid grid-cols-2 gap-3 mb-6">
+            @for (method of paymentMethods; track method.id) {
+              <button
+                (click)="selectPayment(method.id)"
+                class="flex items-center gap-3 p-4 rounded-xl border-2 transition-all text-left"
+                [class]="selectedPayment() === method.id ? 'border-primary bg-primary-light' : 'border-gray-200 hover:border-gray-300'"
+              >
+                <span class="text-2xl">{{ method.icon }}</span>
+                <span class="text-sm font-medium text-gray-900">{{ method.label }}</span>
+              </button>
+            }
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Numéro de téléphone pour le paiement</label>
+            <input type="tel" placeholder="+225 07 XX XX XX XX"
+              class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+          </div>
+        </div>
+      }
+
+      <!-- Navigation Buttons -->
+      <div class="flex items-center justify-between mt-10 pt-6 border-t border-gray-200">
+        @if (currentStep() > 1) {
+          <button (click)="prevStep()" class="inline-flex items-center px-5 py-3 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            Retour
+          </button>
+        } @else {
+          <div></div>
+        }
+
+        @if (currentStep() < totalSteps) {
+          <button (click)="nextStep()" class="inline-flex items-center justify-center px-8 py-3 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-all">
+            Continuer
+            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        } @else {
+          <button (click)="submit()" [disabled]="isSubmitting()" class="inline-flex items-center justify-center px-8 py-3 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+            @if (isSubmitting()) {
+              <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+              Paiement en cours...
+            } @else {
+              Confirmer et payer
+            }
+          </button>
+        }
+      </div>
+    </div>
+  </section>
+}

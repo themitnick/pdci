@@ -1,0 +1,107 @@
+<header
+  class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm transition-all duration-200"
+  [class.border-b]="scrolled()"
+  [class.border-gray-200]="scrolled()"
+  [class.shadow-sm]="scrolled()"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 lg:h-[72px]">
+    <!-- Logo -->
+    <a routerLink="/" class="flex items-center gap-3 no-underline" (click)="closeMenu()">
+      <img src="PDCI_logo.png" alt="PDCI-RDA" class="w-11 h-11 rounded-lg object-contain shrink-0">
+      <div class="flex flex-col">
+        <strong class="text-lg font-bold text-primary leading-tight">PDCI-RDA</strong>
+        <small class="text-xs text-gray-500 leading-tight hidden sm:block">Parti Démocratique de Côte d'Ivoire</small>
+      </div>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="hidden lg:flex items-center gap-1">
+      @for (link of navLinks; track link.path) {
+        <a
+          [routerLink]="link.path"
+          routerLinkActive="!text-primary !font-semibold !bg-primary-light"
+          [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+          class="px-4 py-2 text-sm font-medium text-gray-600 rounded-lg transition-all duration-200 hover:text-primary hover:bg-primary-light no-underline"
+        >
+          {{ link.label }}
+        </a>
+      }
+    </nav>
+
+    <!-- Desktop Action Buttons -->
+    <div class="hidden lg:flex items-center gap-3">
+      <a
+        routerLink="/adhesion"
+        class="inline-flex items-center justify-center px-5 py-2 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-all duration-200 no-underline min-h-10"
+      >
+        Adhérer
+      </a>
+      <a
+        routerLink="/dons"
+        class="inline-flex items-center justify-center px-5 py-2 text-sm font-semibold rounded-lg bg-white text-primary border-2 border-primary hover:bg-primary-light transition-all duration-200 no-underline min-h-10"
+      >
+        Faire un don
+      </a>
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <button
+      class="flex items-center justify-center w-11 h-11 rounded-lg transition-colors hover:bg-gray-100 lg:hidden"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="mobileMenuOpen()"
+      aria-label="Menu de navigation"
+    >
+      <div class="flex flex-col gap-[5px] w-[22px]">
+        <span
+          class="block h-0.5 w-full bg-gray-900 rounded-sm transition-all duration-200 origin-center"
+          [class.rotate-45]="mobileMenuOpen()"
+          [class.translate-y-[7px]]="mobileMenuOpen()"
+        ></span>
+        <span
+          class="block h-0.5 w-full bg-gray-900 rounded-sm transition-all duration-200"
+          [class.opacity-0]="mobileMenuOpen()"
+        ></span>
+        <span
+          class="block h-0.5 w-full bg-gray-900 rounded-sm transition-all duration-200 origin-center"
+          [class.-rotate-45]="mobileMenuOpen()"
+          [class.-translate-y-[7px]]="mobileMenuOpen()"
+        ></span>
+      </div>
+    </button>
+  </div>
+
+  <!-- Mobile Menu -->
+  @if (mobileMenuOpen()) {
+    <div class="fixed inset-x-0 top-16 bottom-0 bg-white z-50 overflow-y-auto lg:hidden animate-fade-in">
+      <nav class="p-6 flex flex-col gap-2">
+        @for (link of navLinks; track link.path) {
+          <a
+            [routerLink]="link.path"
+            routerLinkActive="!text-primary !bg-primary-light"
+            [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+            class="block px-4 py-4 text-lg font-medium text-gray-700 rounded-lg transition-all duration-200 hover:text-primary hover:bg-primary-light no-underline"
+            (click)="closeMenu()"
+          >
+            {{ link.label }}
+          </a>
+        }
+        <div class="flex flex-col gap-3 mt-6 pt-6 border-t border-gray-200">
+          <a
+            routerLink="/adhesion"
+            class="flex items-center justify-center px-5 py-3 text-base font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-all no-underline"
+            (click)="closeMenu()"
+          >
+            Adhérer
+          </a>
+          <a
+            routerLink="/dons"
+            class="flex items-center justify-center px-5 py-3 text-base font-semibold rounded-lg bg-white text-primary border-2 border-primary hover:bg-primary-light transition-all no-underline"
+            (click)="closeMenu()"
+          >
+            Faire un don
+          </a>
+        </div>
+      </nav>
+    </div>
+  }
+</header>

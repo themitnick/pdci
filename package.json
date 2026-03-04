@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "build:css": "npx @tailwindcss/cli -i src/input.css -o src/styles.css --minify",
+    "watch:css": "npx @tailwindcss/cli -i src/input.css -o src/styles.css --watch",
+    "start": "npx @tailwindcss/cli -i src/input.css -o src/styles.css && ng serve",
+    "build": "npm run build:css && ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -36,7 +38,11 @@
     "@angular/build": "^21.1.1",
     "@angular/cli": "^21.1.1",
     "@angular/compiler-cli": "^21.1.0",
+    "@tailwindcss/cli": "^4.2.1",
+    "@tailwindcss/postcss": "^4.2.1",
     "jsdom": "^27.1.0",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.1",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }
