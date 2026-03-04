@@ -190,45 +190,79 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <!-- Main video -->
       <div class="md:col-span-2 group cursor-pointer">
-        <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-900">
-          <img src="slides/pdci-marche-deux-plateaux.jpg" alt="Vidéo à la une" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="w-16 h-16 rounded-full bg-primary flex items-center justify-center group-hover:scale-110 transition-transform shadow-xl">
-              <svg class="w-7 h-7 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        <div class="relative rounded-lg overflow-hidden bg-gray-900 h-full min-h-[280px]">
+          @if (playingHomeVideo() === 'r1C82pfiNps') {
+            <iframe
+              [src]="getEmbedUrl('r1C82pfiNps')"
+              title="Le PDCI-RDA en marche vers la victoire"
+              class="absolute inset-0 w-full h-full border-0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          } @else {
+            <img src="https://img.youtube.com/vi/r1C82pfiNps/maxresdefault.jpg" alt="Le PDCI-RDA en marche vers la victoire" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+            <button (click)="playHomeVideo('r1C82pfiNps')" class="absolute inset-0 flex items-center justify-center cursor-pointer bg-transparent border-none w-full h-full">
+              <div class="w-16 h-16 rounded-full bg-primary flex items-center justify-center group-hover:scale-110 transition-transform shadow-xl">
+                <svg class="w-7 h-7 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </button>
+            <div class="absolute bottom-0 left-0 right-0 p-6 pointer-events-none">
+              <span class="inline-block px-3 py-1 text-[10px] font-black uppercase tracking-wider bg-primary text-white mb-3">Passage TV</span>
+              <h3 class="text-xl md:text-2xl font-extrabold text-white leading-tight">Le PDCI-RDA en marche vers la victoire</h3>
+              <time class="text-sm text-gray-300 mt-2 block">03.03.2026</time>
             </div>
-          </div>
-          <div class="absolute bottom-0 left-0 right-0 p-6">
-            <span class="inline-block px-3 py-1 text-[10px] font-black uppercase tracking-wider bg-primary text-white mb-3">Passage TV</span>
-            <h3 class="text-xl md:text-2xl font-extrabold text-white leading-tight">Le PDCI-RDA en marche vers la victoire</h3>
-            <time class="text-sm text-gray-300 mt-2 block">03.03.2026</time>
-          </div>
+          }
         </div>
       </div>
       <!-- Side videos -->
       <div class="flex flex-col gap-6">
-        <div class="group cursor-pointer">
-          <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-900 mb-3">
-            <img src="slides/Assises-de-la-jeunesse-du-PDCI-RDA.jpg" alt="Vidéo" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80">
-            <div class="absolute inset-0 flex items-center justify-center">
-              <div class="w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center">
-                <svg class="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-              </div>
+        <div class="group cursor-pointer flex-1">
+          @if (playingHomeVideo() === 'VE4z8U4g3Lo') {
+            <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-900 mb-3">
+              <iframe
+                [src]="getEmbedUrl('VE4z8U4g3Lo')"
+                title="Assises de la jeunesse du PDCI-RDA"
+                class="absolute inset-0 w-full h-full border-0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
             </div>
-          </div>
+          } @else {
+            <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-900 mb-3">
+              <img src="https://img.youtube.com/vi/VE4z8U4g3Lo/hqdefault.jpg" alt="Assises de la jeunesse du PDCI-RDA" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80">
+              <button (click)="playHomeVideo('VE4z8U4g3Lo')" class="absolute inset-0 flex items-center justify-center cursor-pointer bg-transparent border-none w-full h-full">
+                <div class="w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+              </button>
+            </div>
+          }
           <span class="text-[10px] font-black uppercase tracking-wider text-primary">Vidéos à la une</span>
           <h4 class="text-sm font-bold text-gray-900 leading-snug mt-1 group-hover:text-primary transition-colors">Assises de la jeunesse du PDCI-RDA</h4>
           <time class="text-xs text-gray-400 mt-1 block">19.02.2026</time>
         </div>
-        <div class="group cursor-pointer">
-          <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-900 mb-3">
-            <img src="slides/tiam.webp" alt="Vidéo" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80">
-            <div class="absolute inset-0 flex items-center justify-center">
-              <div class="w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center">
-                <svg class="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-              </div>
+        <div class="group cursor-pointer flex-1">
+          @if (playingHomeVideo() === 'mWPJcZYBW48') {
+            <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-900 mb-3">
+              <iframe
+                [src]="getEmbedUrl('mWPJcZYBW48')"
+                title="Message du Président Tidjane Thiam aux militants"
+                class="absolute inset-0 w-full h-full border-0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
             </div>
-          </div>
+          } @else {
+            <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-900 mb-3">
+              <img src="https://img.youtube.com/vi/mWPJcZYBW48/hqdefault.jpg" alt="Message du Président Tidjane Thiam" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80">
+              <button (click)="playHomeVideo('mWPJcZYBW48')" class="absolute inset-0 flex items-center justify-center cursor-pointer bg-transparent border-none w-full h-full">
+                <div class="w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+              </button>
+            </div>
+          }
           <span class="text-[10px] font-black uppercase tracking-wider text-primary">Discours</span>
           <h4 class="text-sm font-bold text-gray-900 leading-snug mt-1 group-hover:text-primary transition-colors">Message du Président Tidjane Thiam aux militants</h4>
           <time class="text-xs text-gray-400 mt-1 block">12.02.2026</time>
@@ -237,7 +271,7 @@
     </div>
 
     <div class="mt-8 text-center">
-      <a routerLink="/actualites" class="inline-flex items-center gap-2 text-sm font-bold text-primary uppercase tracking-wider hover:text-primary-dark transition-colors no-underline">
+      <a routerLink="/videos" class="inline-flex items-center gap-2 text-sm font-bold text-primary uppercase tracking-wider hover:text-primary-dark transition-colors no-underline">
         Voir plus de vidéos
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
       </a>
@@ -281,7 +315,7 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6">
     <h2 class="text-xs font-black uppercase tracking-[0.2em] text-primary mb-10 border-b-2 border-primary pb-3 inline-block">Actualités</h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       @for (news of latestNews; track news.id) {
         <article class="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100">
           <div class="relative overflow-hidden aspect-[16/10]">

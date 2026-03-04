@@ -19,6 +19,10 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'videos',
+    loadComponent: () => import('./pages/videos/videos').then(m => m.Videos),
+  },
+  {
     path: 'actualites',
     loadComponent: () => import('./pages/actualites/actualites').then(m => m.Actualites),
   },

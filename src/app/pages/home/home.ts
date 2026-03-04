@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home',
@@ -11,8 +12,12 @@ import { RouterLink } from '@angular/router';
 export class Home implements OnInit, OnDestroy {
   private slideInterval: ReturnType<typeof setInterval> | null = null;
   private readonly SLIDE_DURATION = 6000;
+  private readonly embedUrlCache = new Map<string, SafeResourceUrl>();
 
   protected readonly currentSlide = signal(0);
+  protected readonly playingHomeVideo = signal<string | null>(null);
+
+  constructor(private readonly sanitizer: DomSanitizer) {}
 
   protected readonly slides = [
     { image: 'slides/tiam.webp' },
@@ -59,6 +64,21 @@ export class Home implements OnInit, OnDestroy {
   private restartAutoSlide(): void {
     this.stopAutoSlide();
     this.startAutoSlide();
+  }
+
+  protected playHomeVideo(youtubeId: string): void {
+    this.playingHomeVideo.set(youtubeId);
+  }
+
+  protected getEmbedUrl(youtubeId: string): SafeResourceUrl {
+    let url = this.embedUrlCache.get(youtubeId);
+    if (!url) {
+      url = this.sanitizer.bypassSecurityTrustResourceUrl(
+        `https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0&enablejsapi=1`
+      );
+      this.embedUrlCache.set(youtubeId, url);
+    }
+    return url;
   }
   protected readonly stats = [
     { value: '5M+', label: 'Militants' },
